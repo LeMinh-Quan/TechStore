@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th10 23, 2026 lúc 09:30 AM
+-- Thời gian đã tạo: Th10 24, 2026 lúc 04:11 PM
 -- Phiên bản máy phục vụ: 10.4.32-MariaDB
 -- Phiên bản PHP: 8.2.12
 
@@ -38,6 +38,17 @@ CREATE TABLE `api_access_tokens` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Đang đổ dữ liệu cho bảng `api_access_tokens`
+--
+
+INSERT INTO `api_access_tokens` (`id`, `token_hash`, `account_type`, `account_id`, `expires_at`, `last_used_at`, `created_at`, `updated_at`) VALUES
+(2, 'ffa6284518c52accc0fad19dd184d378185ee1f468ab8ee9b8c47b5a33417775', 'admin', 'chat_test_admin', '2026-10-23 07:39:37', '2026-10-23 00:39:37', '2026-10-23 00:39:29', '2026-10-23 00:39:29'),
+(3, '2b81d78ddb79ed4e44ee46fd0f9e0702f720647efeb284a69e9480ea33e69109', 'admin', 'chat_test_admin', '2026-10-23 07:40:02', '2026-10-23 00:40:02', '2026-10-23 00:39:55', '2026-10-23 00:39:55'),
+(4, '0b4379968d4842b12c5295ae26d2b79c7221e4a8d32c0e2034b1c5c5949f3285', 'admin', 'chat_test_admin', '2026-10-23 07:40:21', '2026-10-23 00:40:21', '2026-10-23 00:40:18', '2026-10-23 00:40:18'),
+(5, '673bb5ccccf5ffd1132ef39ebe90b5409f9efaccee343d23f7990a021a93207f', 'customer', 'KHYVNNDQNV4Z1H', '2026-10-23 09:59:47', '2026-10-23 02:59:47', '2026-10-23 02:59:22', '2026-10-23 02:59:22'),
+(7, 'cce4b5bf5ad9d6b19132f9ada6bb3e14d27075d74460739490dd21697b658888', 'customer', 'KHYVNNDQNV4Z1H', '2026-10-23 14:20:08', '2026-10-23 07:20:08', '2026-10-23 06:29:01', '2026-10-23 06:29:01');
+
 -- --------------------------------------------------------
 
 --
@@ -53,6 +64,13 @@ CREATE TABLE `bai_viet` (
   `tk_admin` varchar(20) NOT NULL,
   `thoi_gian_tao` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `bai_viet`
+--
+
+INSERT INTO `bai_viet` (`id_bai_viet`, `tieu_de`, `duong_dan_slug`, `noi_dung`, `anh_dai_dien`, `tk_admin`, `thoi_gian_tao`) VALUES
+(1, 'Hướng dẫn chọn laptop phù hợp nhu cầu', 'huong-dan-chon-laptop-mau', 'Bài viết mẫu: xác định nhu cầu, ngân sách, cấu hình và chế độ bảo hành trước khi chọn mua laptop.', NULL, 'QuanDev', '2026-10-24 03:04:49');
 
 -- --------------------------------------------------------
 
@@ -75,6 +93,19 @@ CREATE TABLE `bang_luong` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Đang đổ dữ liệu cho bảng `bang_luong`
+--
+
+INSERT INTO `bang_luong` (`id`, `tk_admin`, `thang`, `nam`, `luong_co_ban`, `phu_cap`, `thuong`, `khau_tru`, `trang_thai`, `ngay_thanh_toan`, `created_at`, `updated_at`) VALUES
+(1, 'QuanDev', 10, 2026, 0, 1000000, 500000, 0, 'chua_thanh_toan', NULL, '2026-10-23 20:04:48', '2026-10-23 20:04:48'),
+(2, '0306241090', 10, 2026, 12000000, 1000000, 500000, 0, 'chua_thanh_toan', NULL, '2026-10-23 20:04:48', '2026-10-23 20:04:48'),
+(3, '0306241102', 10, 2026, 12000000, 1000000, 500000, 0, 'chua_thanh_toan', NULL, '2026-10-23 20:04:48', '2026-10-23 20:04:48'),
+(4, '0306241125', 10, 2026, 12000000, 1000000, 500000, 0, 'chua_thanh_toan', NULL, '2026-10-23 20:04:48', '2026-10-23 20:04:48'),
+(5, '0306241126', 10, 2026, 12000000, 1000000, 500000, 0, 'chua_thanh_toan', NULL, '2026-10-23 20:04:48', '2026-10-23 20:04:48'),
+(6, '0306241131', 10, 2026, 12000000, 1000000, 500000, 0, 'chua_thanh_toan', NULL, '2026-10-23 20:04:48', '2026-10-23 20:04:48'),
+(7, '0306241145', 10, 2026, 12000000, 1000000, 500000, 0, 'chua_thanh_toan', NULL, '2026-10-23 20:04:48', '2026-10-23 20:04:48');
+
 -- --------------------------------------------------------
 
 --
@@ -90,6 +121,13 @@ CREATE TABLE `banner` (
   `thu_tu` int(11) DEFAULT 0,
   `trang_thai` tinyint(1) DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `banner`
+--
+
+INSERT INTO `banner` (`id_banner`, `tieu_de`, `duong_dan_anh`, `lien_ket`, `vi_tri`, `thu_tu`, `trang_thai`) VALUES
+(1, 'Ưu đãi công nghệ tại TechStore', '/images/demo/techstore-banner.svg', '/products', 'home_slider', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -109,6 +147,13 @@ CREATE TABLE `bao_hanh` (
   `ghi_chu_xu_ly` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Đang đổ dữ liệu cho bảng `bao_hanh`
+--
+
+INSERT INTO `bao_hanh` (`id_bao_hanh`, `id_serial`, `ma_kh`, `ma_dh`, `ngay_bat_dau`, `ngay_het_han`, `ghi_chu`, `trang_thai_xu_ly`, `ghi_chu_xu_ly`) VALUES
+('BHDEMO0001', 1, 'KHDEMO000001', 'DHDEMO0001', '2026-10-23', '2027-10-24', 'Bảo hành mẫu trong một năm.', 'active', NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -126,10 +171,10 @@ CREATE TABLE `cache` (
 --
 
 INSERT INTO `cache` (`key`, `value`, `expiration`) VALUES
-('laravel_cache_5c785c036466adea360111aa28563bfd556b5fba', 'i:33;', 1792739764),
-('laravel_cache_5c785c036466adea360111aa28563bfd556b5fba:timer', 'i:1792739764;', 1792739764),
-('laravel_cache_a9347a6efa79d0b2aa482dd4d7a77fc6', 'i:33;', 1792739764),
-('laravel_cache_a9347a6efa79d0b2aa482dd4d7a77fc6:timer', 'i:1792739764;', 1792739764);
+('laravel_cache_5c785c036466adea360111aa28563bfd556b5fba', 'i:6;', 1792763884),
+('laravel_cache_5c785c036466adea360111aa28563bfd556b5fba:timer', 'i:1792763884;', 1792763884),
+('laravel_cache_a9347a6efa79d0b2aa482dd4d7a77fc6', 'i:4;', 1792765262),
+('laravel_cache_a9347a6efa79d0b2aa482dd4d7a77fc6:timer', 'i:1792765262;', 1792765262);
 
 -- --------------------------------------------------------
 
@@ -153,19 +198,21 @@ CREATE TABLE `chatbot_conversations` (
   `id` char(36) NOT NULL,
   `status` varchar(20) NOT NULL DEFAULT 'bot',
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `assigned_admin_id` varchar(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Đang đổ dữ liệu cho bảng `chatbot_conversations`
 --
 
-INSERT INTO `chatbot_conversations` (`id`, `status`, `created_at`, `updated_at`) VALUES
-('5c251dc2-5598-45a8-96d7-c67c5a275570', 'bot', '2026-10-22 23:23:13', '2026-10-22 23:23:14'),
-('5fc01042-74b8-4657-aea6-5ed96f819049', 'bot', '2026-10-22 23:22:44', '2026-10-22 23:22:44'),
-('b6cfc8bc-f565-4781-8d3b-37a4f1c43407', 'waiting_admin', '2026-10-22 22:30:15', '2026-10-22 22:30:16'),
-('ef2baf5e-df12-49c4-8fda-41238ae62a97', 'bot', '2026-10-22 23:22:44', '2026-10-22 23:22:44'),
-('f0db3d8f-790a-4266-828b-4cbedcf6edb1', 'bot', '2026-10-22 23:23:22', '2026-10-22 23:23:23');
+INSERT INTO `chatbot_conversations` (`id`, `status`, `created_at`, `updated_at`, `assigned_admin_id`) VALUES
+('04b06730-3f17-4c38-bebc-098a866e2cdf', 'bot', '2026-10-23 02:57:49', '2026-10-23 02:58:21', NULL),
+('5c251dc2-5598-45a8-96d7-c67c5a275570', 'bot', '2026-10-22 23:23:13', '2026-10-22 23:23:14', NULL),
+('5fc01042-74b8-4657-aea6-5ed96f819049', 'bot', '2026-10-22 23:22:44', '2026-10-22 23:22:44', NULL),
+('b6cfc8bc-f565-4781-8d3b-37a4f1c43407', 'waiting_admin', '2026-10-22 22:30:15', '2026-10-22 22:30:16', NULL),
+('ef2baf5e-df12-49c4-8fda-41238ae62a97', 'bot', '2026-10-22 23:22:44', '2026-10-22 23:22:44', NULL),
+('f0db3d8f-790a-4266-828b-4cbedcf6edb1', 'bot', '2026-10-22 23:23:22', '2026-10-22 23:23:23', NULL);
 
 -- --------------------------------------------------------
 
@@ -230,7 +277,93 @@ INSERT INTO `chatbot_huan_luyen` (`id`, `y_dinh`, `cau_hoi`, `phan_hoi`, `trang_
 (27, 'warranty', 'Chính sách đổi trả như thế nào?', 'Chủ đề: bảo hành / đổi trả. Thời hạn bảo hành tùy theo sản phẩm. Bạn hãy mở trang chi tiết sản phẩm để xem thông tin bảo hành hoặc chọn “Gặp nhân viên” để được kiểm tra cụ thể.', 1, '2026-10-22 22:35:47'),
 (28, 'warranty', 'Sản phẩm bị lỗi thì xử lý ra sao?', 'Chủ đề: bảo hành / đổi trả. Thời hạn bảo hành tùy theo sản phẩm. Bạn hãy mở trang chi tiết sản phẩm để xem thông tin bảo hành hoặc chọn “Gặp nhân viên” để được kiểm tra cụ thể.', 1, '2026-10-22 22:35:47'),
 (29, 'warranty', 'Tôi cần kiểm tra bảo hành', 'Chủ đề: bảo hành / đổi trả. Thời hạn bảo hành tùy theo sản phẩm. Bạn hãy mở trang chi tiết sản phẩm để xem thông tin bảo hành hoặc chọn “Gặp nhân viên” để được kiểm tra cụ thể.', 1, '2026-10-22 22:35:47'),
-(30, 'warranty', 'Làm thế nào để yêu cầu đổi trả?', 'Chủ đề: bảo hành / đổi trả. Thời hạn bảo hành tùy theo sản phẩm. Bạn hãy mở trang chi tiết sản phẩm để xem thông tin bảo hành hoặc chọn “Gặp nhân viên” để được kiểm tra cụ thể.', 1, '2026-10-22 22:35:47');
+(30, 'warranty', 'Làm thế nào để yêu cầu đổi trả?', 'Chủ đề: bảo hành / đổi trả. Thời hạn bảo hành tùy theo sản phẩm. Bạn hãy mở trang chi tiết sản phẩm để xem thông tin bảo hành hoặc chọn “Gặp nhân viên” để được kiểm tra cụ thể.', 1, '2026-10-22 22:35:47'),
+(34, 'greeting', 'Hello', 'Xin chào! Mình có thể tư vấn cấu hình, tìm sản phẩm đang bán hoặc hỗ trợ đơn hàng.', 1, '2026-10-24 07:05:02'),
+(35, 'greeting', 'Hi shop', 'Xin chào! Mình có thể tư vấn cấu hình, tìm sản phẩm đang bán hoặc hỗ trợ đơn hàng.', 1, '2026-10-24 07:05:02'),
+(36, 'greeting', 'Chào bạn', 'Xin chào! Mình có thể tư vấn cấu hình, tìm sản phẩm đang bán hoặc hỗ trợ đơn hàng.', 1, '2026-10-24 07:05:02'),
+(37, 'greeting', 'Alo', 'Xin chào! Mình có thể tư vấn cấu hình, tìm sản phẩm đang bán hoặc hỗ trợ đơn hàng.', 1, '2026-10-24 07:05:02'),
+(38, 'greeting', 'Shop ơi', 'Xin chào! Mình có thể tư vấn cấu hình, tìm sản phẩm đang bán hoặc hỗ trợ đơn hàng.', 1, '2026-10-24 07:05:02'),
+(39, 'greeting', 'Chào buổi sáng', 'Xin chào! Mình có thể tư vấn cấu hình, tìm sản phẩm đang bán hoặc hỗ trợ đơn hàng.', 1, '2026-10-24 07:05:02'),
+(40, 'greeting', 'Chào buổi tối', 'Xin chào! Mình có thể tư vấn cấu hình, tìm sản phẩm đang bán hoặc hỗ trợ đơn hàng.', 1, '2026-10-24 07:05:02'),
+(41, 'greeting', 'Có ai ở đó không?', 'Xin chào! Mình có thể tư vấn cấu hình, tìm sản phẩm đang bán hoặc hỗ trợ đơn hàng.', 1, '2026-10-24 07:05:02'),
+(42, 'greeting', 'Cho mình hỏi chút', 'Xin chào! Mình có thể tư vấn cấu hình, tìm sản phẩm đang bán hoặc hỗ trợ đơn hàng.', 1, '2026-10-24 07:05:02'),
+(43, 'greeting', 'Mình muốn hỏi một chút', 'Xin chào! Mình có thể tư vấn cấu hình, tìm sản phẩm đang bán hoặc hỗ trợ đơn hàng.', 1, '2026-10-24 07:05:02'),
+(44, 'greeting', 'Bạn ơi', 'Xin chào! Mình có thể tư vấn cấu hình, tìm sản phẩm đang bán hoặc hỗ trợ đơn hàng.', 1, '2026-10-24 07:05:02'),
+(45, 'greeting', 'Xin chào, mình cần hỗ trợ', 'Xin chào! Mình có thể tư vấn cấu hình, tìm sản phẩm đang bán hoặc hỗ trợ đơn hàng.', 1, '2026-10-24 07:05:02'),
+(46, 'greeting', 'Chào admin', 'Xin chào! Mình có thể tư vấn cấu hình, tìm sản phẩm đang bán hoặc hỗ trợ đơn hàng.', 1, '2026-10-24 07:05:02'),
+(47, 'greeting', 'Hey', 'Xin chào! Mình có thể tư vấn cấu hình, tìm sản phẩm đang bán hoặc hỗ trợ đơn hàng.', 1, '2026-10-24 07:05:02'),
+(48, 'greeting', 'Shop còn online không?', 'Xin chào! Mình có thể tư vấn cấu hình, tìm sản phẩm đang bán hoặc hỗ trợ đơn hàng.', 1, '2026-10-24 07:05:02'),
+(49, 'payment', 'Có hỗ trợ COD không?', 'Chủ đề: thanh toán. Bạn có thể chọn thanh toán khi nhận hàng hoặc chuyển khoản mô phỏng lúc đặt hàng. Chuyển khoản trong phiên bản này chưa kết nối ngân hàng.', 1, '2026-10-24 07:05:02'),
+(50, 'payment', 'Thanh toán qua ví điện tử được không?', 'Chủ đề: thanh toán. Bạn có thể chọn thanh toán khi nhận hàng hoặc chuyển khoản mô phỏng lúc đặt hàng. Chuyển khoản trong phiên bản này chưa kết nối ngân hàng.', 1, '2026-10-24 07:05:02'),
+(51, 'payment', 'Shop nhận thẻ ATM không?', 'Chủ đề: thanh toán. Bạn có thể chọn thanh toán khi nhận hàng hoặc chuyển khoản mô phỏng lúc đặt hàng. Chuyển khoản trong phiên bản này chưa kết nối ngân hàng.', 1, '2026-10-24 07:05:02'),
+(52, 'payment', 'Có quẹt thẻ tín dụng được không?', 'Chủ đề: thanh toán. Bạn có thể chọn thanh toán khi nhận hàng hoặc chuyển khoản mô phỏng lúc đặt hàng. Chuyển khoản trong phiên bản này chưa kết nối ngân hàng.', 1, '2026-10-24 07:05:02'),
+(53, 'payment', 'Số tài khoản ngân hàng của shop là gì?', 'Chủ đề: thanh toán. Bạn có thể chọn thanh toán khi nhận hàng hoặc chuyển khoản mô phỏng lúc đặt hàng. Chuyển khoản trong phiên bản này chưa kết nối ngân hàng.', 1, '2026-10-24 07:05:02'),
+(54, 'payment', 'Mình muốn chuyển khoản trước thì làm sao?', 'Chủ đề: thanh toán. Bạn có thể chọn thanh toán khi nhận hàng hoặc chuyển khoản mô phỏng lúc đặt hàng. Chuyển khoản trong phiên bản này chưa kết nối ngân hàng.', 1, '2026-10-24 07:05:02'),
+(55, 'payment', 'Có thanh toán bằng QR không?', 'Chủ đề: thanh toán. Bạn có thể chọn thanh toán khi nhận hàng hoặc chuyển khoản mô phỏng lúc đặt hàng. Chuyển khoản trong phiên bản này chưa kết nối ngân hàng.', 1, '2026-10-24 07:05:02'),
+(56, 'payment', 'Hình thức thanh toán nào được hỗ trợ?', 'Chủ đề: thanh toán. Bạn có thể chọn thanh toán khi nhận hàng hoặc chuyển khoản mô phỏng lúc đặt hàng. Chuyển khoản trong phiên bản này chưa kết nối ngân hàng.', 1, '2026-10-24 07:05:02'),
+(57, 'payment', 'Trả tiền mặt khi shipper giao tới được không?', 'Chủ đề: thanh toán. Bạn có thể chọn thanh toán khi nhận hàng hoặc chuyển khoản mô phỏng lúc đặt hàng. Chuyển khoản trong phiên bản này chưa kết nối ngân hàng.', 1, '2026-10-24 07:05:02'),
+(58, 'payment', 'Chuyển khoản xong có cần gửi biên lai không?', 'Chủ đề: thanh toán. Bạn có thể chọn thanh toán khi nhận hàng hoặc chuyển khoản mô phỏng lúc đặt hàng. Chuyển khoản trong phiên bản này chưa kết nối ngân hàng.', 1, '2026-10-24 07:05:02'),
+(59, 'payment', 'Thanh toán Momo được không?', 'Chủ đề: thanh toán. Bạn có thể chọn thanh toán khi nhận hàng hoặc chuyển khoản mô phỏng lúc đặt hàng. Chuyển khoản trong phiên bản này chưa kết nối ngân hàng.', 1, '2026-10-24 07:05:02'),
+(60, 'payment', 'Mình có phải đặt cọc không?', 'Chủ đề: thanh toán. Bạn có thể chọn thanh toán khi nhận hàng hoặc chuyển khoản mô phỏng lúc đặt hàng. Chuyển khoản trong phiên bản này chưa kết nối ngân hàng.', 1, '2026-10-24 07:05:02'),
+(61, 'payment', 'Có thể thanh toán một phần trước không?', 'Chủ đề: thanh toán. Bạn có thể chọn thanh toán khi nhận hàng hoặc chuyển khoản mô phỏng lúc đặt hàng. Chuyển khoản trong phiên bản này chưa kết nối ngân hàng.', 1, '2026-10-24 07:05:02'),
+(62, 'payment', 'Thanh toán thất bại thì làm sao?', 'Chủ đề: thanh toán. Bạn có thể chọn thanh toán khi nhận hàng hoặc chuyển khoản mô phỏng lúc đặt hàng. Chuyển khoản trong phiên bản này chưa kết nối ngân hàng.', 1, '2026-10-24 07:05:02'),
+(63, 'payment', 'Phương thức thanh toán nào an toàn nhất?', 'Chủ đề: thanh toán. Bạn có thể chọn thanh toán khi nhận hàng hoặc chuyển khoản mô phỏng lúc đặt hàng. Chuyển khoản trong phiên bản này chưa kết nối ngân hàng.', 1, '2026-10-24 07:05:02'),
+(64, 'checkout', 'Mình muốn mua sản phẩm này', 'Chủ đề: đặt hàng. Bạn chọn sản phẩm, thêm vào giỏ, đăng nhập rồi điền thông tin giao hàng để đặt hàng. Hiện cửa hàng hỗ trợ thanh toán khi nhận hàng hoặc chuyển khoản mô phỏng.', 1, '2026-10-24 07:05:02'),
+(65, 'checkout', 'Đặt hàng online thế nào?', 'Chủ đề: đặt hàng. Bạn chọn sản phẩm, thêm vào giỏ, đăng nhập rồi điền thông tin giao hàng để đặt hàng. Hiện cửa hàng hỗ trợ thanh toán khi nhận hàng hoặc chuyển khoản mô phỏng.', 1, '2026-10-24 07:05:02'),
+(66, 'checkout', 'Thêm vào giỏ hàng ở đâu?', 'Chủ đề: đặt hàng. Bạn chọn sản phẩm, thêm vào giỏ, đăng nhập rồi điền thông tin giao hàng để đặt hàng. Hiện cửa hàng hỗ trợ thanh toán khi nhận hàng hoặc chuyển khoản mô phỏng.', 1, '2026-10-24 07:05:02'),
+(67, 'checkout', 'Giỏ hàng của tôi ở đâu?', 'Chủ đề: đặt hàng. Bạn chọn sản phẩm, thêm vào giỏ, đăng nhập rồi điền thông tin giao hàng để đặt hàng. Hiện cửa hàng hỗ trợ thanh toán khi nhận hàng hoặc chuyển khoản mô phỏng.', 1, '2026-10-24 07:05:02'),
+(68, 'checkout', 'Có cần đăng nhập mới đặt hàng được không?', 'Chủ đề: đặt hàng. Bạn chọn sản phẩm, thêm vào giỏ, đăng nhập rồi điền thông tin giao hàng để đặt hàng. Hiện cửa hàng hỗ trợ thanh toán khi nhận hàng hoặc chuyển khoản mô phỏng.', 1, '2026-10-24 07:05:02'),
+(69, 'checkout', 'Đặt hàng xong có nhận được xác nhận không?', 'Chủ đề: đặt hàng. Bạn chọn sản phẩm, thêm vào giỏ, đăng nhập rồi điền thông tin giao hàng để đặt hàng. Hiện cửa hàng hỗ trợ thanh toán khi nhận hàng hoặc chuyển khoản mô phỏng.', 1, '2026-10-24 07:05:02'),
+(70, 'checkout', 'Mình muốn mua nhiều sản phẩm cùng lúc', 'Chủ đề: đặt hàng. Bạn chọn sản phẩm, thêm vào giỏ, đăng nhập rồi điền thông tin giao hàng để đặt hàng. Hiện cửa hàng hỗ trợ thanh toán khi nhận hàng hoặc chuyển khoản mô phỏng.', 1, '2026-10-24 07:05:02'),
+(71, 'checkout', 'Đổi địa chỉ nhận hàng lúc đặt thế nào?', 'Chủ đề: đặt hàng. Bạn chọn sản phẩm, thêm vào giỏ, đăng nhập rồi điền thông tin giao hàng để đặt hàng. Hiện cửa hàng hỗ trợ thanh toán khi nhận hàng hoặc chuyển khoản mô phỏng.', 1, '2026-10-24 07:05:02'),
+(72, 'checkout', 'Có thể đặt hàng không cần tài khoản không?', 'Chủ đề: đặt hàng. Bạn chọn sản phẩm, thêm vào giỏ, đăng nhập rồi điền thông tin giao hàng để đặt hàng. Hiện cửa hàng hỗ trợ thanh toán khi nhận hàng hoặc chuyển khoản mô phỏng.', 1, '2026-10-24 07:05:02'),
+(73, 'checkout', 'Đặt hàng bị lỗi thì làm sao?', 'Chủ đề: đặt hàng. Bạn chọn sản phẩm, thêm vào giỏ, đăng nhập rồi điền thông tin giao hàng để đặt hàng. Hiện cửa hàng hỗ trợ thanh toán khi nhận hàng hoặc chuyển khoản mô phỏng.', 1, '2026-10-24 07:05:02'),
+(74, 'checkout', 'Sửa số lượng trong giỏ hàng thế nào?', 'Chủ đề: đặt hàng. Bạn chọn sản phẩm, thêm vào giỏ, đăng nhập rồi điền thông tin giao hàng để đặt hàng. Hiện cửa hàng hỗ trợ thanh toán khi nhận hàng hoặc chuyển khoản mô phỏng.', 1, '2026-10-24 07:05:02'),
+(75, 'checkout', 'Xóa sản phẩm khỏi giỏ hàng như nào?', 'Chủ đề: đặt hàng. Bạn chọn sản phẩm, thêm vào giỏ, đăng nhập rồi điền thông tin giao hàng để đặt hàng. Hiện cửa hàng hỗ trợ thanh toán khi nhận hàng hoặc chuyển khoản mô phỏng.', 1, '2026-10-24 07:05:02'),
+(76, 'checkout', 'Mua hàng cho người khác được không?', 'Chủ đề: đặt hàng. Bạn chọn sản phẩm, thêm vào giỏ, đăng nhập rồi điền thông tin giao hàng để đặt hàng. Hiện cửa hàng hỗ trợ thanh toán khi nhận hàng hoặc chuyển khoản mô phỏng.', 1, '2026-10-24 07:05:02'),
+(77, 'checkout', 'Nút đặt hàng bấm không được', 'Chủ đề: đặt hàng. Bạn chọn sản phẩm, thêm vào giỏ, đăng nhập rồi điền thông tin giao hàng để đặt hàng. Hiện cửa hàng hỗ trợ thanh toán khi nhận hàng hoặc chuyển khoản mô phỏng.', 1, '2026-10-24 07:05:02'),
+(78, 'order', 'Đơn hàng của mình đã được xác nhận chưa?', 'Chủ đề: đơn hàng. Đăng nhập tài khoản, mở mục đơn hàng để xem trạng thái hoặc hủy đơn khi đơn vẫn đang chờ xác nhận.', 1, '2026-10-24 07:05:02'),
+(79, 'order', 'Mình muốn hủy đơn vừa đặt', 'Chủ đề: đơn hàng. Đăng nhập tài khoản, mở mục đơn hàng để xem trạng thái hoặc hủy đơn khi đơn vẫn đang chờ xác nhận.', 1, '2026-10-24 07:05:02'),
+(80, 'order', 'Đơn đang chờ xác nhận bao lâu?', 'Chủ đề: đơn hàng. Đăng nhập tài khoản, mở mục đơn hàng để xem trạng thái hoặc hủy đơn khi đơn vẫn đang chờ xác nhận.', 1, '2026-10-24 07:05:02'),
+(81, 'order', 'Tra cứu đơn bằng mã đơn', 'Chủ đề: đơn hàng. Đăng nhập tài khoản, mở mục đơn hàng để xem trạng thái hoặc hủy đơn khi đơn vẫn đang chờ xác nhận.', 1, '2026-10-24 07:05:02'),
+(82, 'order', 'Sao đơn của mình chưa được duyệt?', 'Chủ đề: đơn hàng. Đăng nhập tài khoản, mở mục đơn hàng để xem trạng thái hoặc hủy đơn khi đơn vẫn đang chờ xác nhận.', 1, '2026-10-24 07:05:02'),
+(83, 'order', 'Mình đặt nhầm sản phẩm, đổi được không?', 'Chủ đề: đơn hàng. Đăng nhập tài khoản, mở mục đơn hàng để xem trạng thái hoặc hủy đơn khi đơn vẫn đang chờ xác nhận.', 1, '2026-10-24 07:05:02'),
+(84, 'order', 'Có sửa được đơn sau khi đặt không?', 'Chủ đề: đơn hàng. Đăng nhập tài khoản, mở mục đơn hàng để xem trạng thái hoặc hủy đơn khi đơn vẫn đang chờ xác nhận.', 1, '2026-10-24 07:05:02'),
+(85, 'order', 'Lịch sử đơn hàng nằm ở mục nào?', 'Chủ đề: đơn hàng. Đăng nhập tài khoản, mở mục đơn hàng để xem trạng thái hoặc hủy đơn khi đơn vẫn đang chờ xác nhận.', 1, '2026-10-24 07:05:02'),
+(86, 'order', 'Đơn hàng bị hủy là sao?', 'Chủ đề: đơn hàng. Đăng nhập tài khoản, mở mục đơn hàng để xem trạng thái hoặc hủy đơn khi đơn vẫn đang chờ xác nhận.', 1, '2026-10-24 07:05:02'),
+(87, 'order', 'Mình muốn đổi số điện thoại trong đơn', 'Chủ đề: đơn hàng. Đăng nhập tài khoản, mở mục đơn hàng để xem trạng thái hoặc hủy đơn khi đơn vẫn đang chờ xác nhận.', 1, '2026-10-24 07:05:02'),
+(88, 'order', 'Đặt xong rồi mà không thấy đơn đâu', 'Chủ đề: đơn hàng. Đăng nhập tài khoản, mở mục đơn hàng để xem trạng thái hoặc hủy đơn khi đơn vẫn đang chờ xác nhận.', 1, '2026-10-24 07:05:02'),
+(89, 'order', 'Làm sao biết đơn đã được giao chưa?', 'Chủ đề: đơn hàng. Đăng nhập tài khoản, mở mục đơn hàng để xem trạng thái hoặc hủy đơn khi đơn vẫn đang chờ xác nhận.', 1, '2026-10-24 07:05:02'),
+(90, 'order', 'Mình quên mã đơn hàng thì tra thế nào?', 'Chủ đề: đơn hàng. Đăng nhập tài khoản, mở mục đơn hàng để xem trạng thái hoặc hủy đơn khi đơn vẫn đang chờ xác nhận.', 1, '2026-10-24 07:05:02'),
+(91, 'order', 'Đơn hàng bị trùng, hủy giúp mình', 'Chủ đề: đơn hàng. Đăng nhập tài khoản, mở mục đơn hàng để xem trạng thái hoặc hủy đơn khi đơn vẫn đang chờ xác nhận.', 1, '2026-10-24 07:05:02'),
+(92, 'delivery', 'Giao hàng mất bao lâu?', 'Chủ đề: giao hàng. Bạn có thể nhập địa chỉ giao hàng khi đặt đơn. Để kiểm tra phí hoặc tiến độ giao hàng cụ thể, hãy gửi mã đơn hoặc chọn “Gặp nhân viên”.', 1, '2026-10-24 07:05:02'),
+(93, 'delivery', 'Shop có giao hàng tận nơi không?', 'Chủ đề: giao hàng. Bạn có thể nhập địa chỉ giao hàng khi đặt đơn. Để kiểm tra phí hoặc tiến độ giao hàng cụ thể, hãy gửi mã đơn hoặc chọn “Gặp nhân viên”.', 1, '2026-10-24 07:05:02'),
+(94, 'delivery', 'Có miễn phí vận chuyển không?', 'Chủ đề: giao hàng. Bạn có thể nhập địa chỉ giao hàng khi đặt đơn. Để kiểm tra phí hoặc tiến độ giao hàng cụ thể, hãy gửi mã đơn hoặc chọn “Gặp nhân viên”.', 1, '2026-10-24 07:05:02'),
+(95, 'delivery', 'Giao hàng ở tỉnh có được không?', 'Chủ đề: giao hàng. Bạn có thể nhập địa chỉ giao hàng khi đặt đơn. Để kiểm tra phí hoặc tiến độ giao hàng cụ thể, hãy gửi mã đơn hoặc chọn “Gặp nhân viên”.', 1, '2026-10-24 07:05:02'),
+(96, 'delivery', 'Ship về Hà Nội mất mấy ngày?', 'Chủ đề: giao hàng. Bạn có thể nhập địa chỉ giao hàng khi đặt đơn. Để kiểm tra phí hoặc tiến độ giao hàng cụ thể, hãy gửi mã đơn hoặc chọn “Gặp nhân viên”.', 1, '2026-10-24 07:05:02'),
+(97, 'delivery', 'Phí ship đơn trên 5 triệu là bao nhiêu?', 'Chủ đề: giao hàng. Bạn có thể nhập địa chỉ giao hàng khi đặt đơn. Để kiểm tra phí hoặc tiến độ giao hàng cụ thể, hãy gửi mã đơn hoặc chọn “Gặp nhân viên”.', 1, '2026-10-24 07:05:02'),
+(98, 'delivery', 'Shop giao qua đơn vị vận chuyển nào?', 'Chủ đề: giao hàng. Bạn có thể nhập địa chỉ giao hàng khi đặt đơn. Để kiểm tra phí hoặc tiến độ giao hàng cụ thể, hãy gửi mã đơn hoặc chọn “Gặp nhân viên”.', 1, '2026-10-24 07:05:02'),
+(99, 'delivery', 'Có giao hàng nhanh trong ngày không?', 'Chủ đề: giao hàng. Bạn có thể nhập địa chỉ giao hàng khi đặt đơn. Để kiểm tra phí hoặc tiến độ giao hàng cụ thể, hãy gửi mã đơn hoặc chọn “Gặp nhân viên”.', 1, '2026-10-24 07:05:02'),
+(100, 'delivery', 'Mình muốn đổi địa chỉ giao hàng', 'Chủ đề: giao hàng. Bạn có thể nhập địa chỉ giao hàng khi đặt đơn. Để kiểm tra phí hoặc tiến độ giao hàng cụ thể, hãy gửi mã đơn hoặc chọn “Gặp nhân viên”.', 1, '2026-10-24 07:05:02'),
+(101, 'delivery', 'Shipper không gọi cho mình thì sao?', 'Chủ đề: giao hàng. Bạn có thể nhập địa chỉ giao hàng khi đặt đơn. Để kiểm tra phí hoặc tiến độ giao hàng cụ thể, hãy gửi mã đơn hoặc chọn “Gặp nhân viên”.', 1, '2026-10-24 07:05:02'),
+(102, 'delivery', 'Có cho kiểm tra hàng trước khi thanh toán không?', 'Chủ đề: giao hàng. Bạn có thể nhập địa chỉ giao hàng khi đặt đơn. Để kiểm tra phí hoặc tiến độ giao hàng cụ thể, hãy gửi mã đơn hoặc chọn “Gặp nhân viên”.', 1, '2026-10-24 07:05:02'),
+(103, 'delivery', 'Giao hàng vào cuối tuần được không?', 'Chủ đề: giao hàng. Bạn có thể nhập địa chỉ giao hàng khi đặt đơn. Để kiểm tra phí hoặc tiến độ giao hàng cụ thể, hãy gửi mã đơn hoặc chọn “Gặp nhân viên”.', 1, '2026-10-24 07:05:02'),
+(104, 'delivery', 'Hàng đã giao nhưng mình chưa nhận được', 'Chủ đề: giao hàng. Bạn có thể nhập địa chỉ giao hàng khi đặt đơn. Để kiểm tra phí hoặc tiến độ giao hàng cụ thể, hãy gửi mã đơn hoặc chọn “Gặp nhân viên”.', 1, '2026-10-24 07:05:02'),
+(105, 'delivery', 'Có thể hẹn giờ giao hàng không?', 'Chủ đề: giao hàng. Bạn có thể nhập địa chỉ giao hàng khi đặt đơn. Để kiểm tra phí hoặc tiến độ giao hàng cụ thể, hãy gửi mã đơn hoặc chọn “Gặp nhân viên”.', 1, '2026-10-24 07:05:02'),
+(106, 'warranty', 'Bảo hành chính hãng bao nhiêu tháng?', 'Chủ đề: bảo hành / đổi trả. Thời hạn bảo hành tùy theo sản phẩm. Bạn hãy mở trang chi tiết sản phẩm để xem thông tin bảo hành hoặc chọn “Gặp nhân viên” để được kiểm tra cụ thể.', 1, '2026-10-24 07:05:02'),
+(107, 'warranty', 'Laptop bảo hành mấy năm?', 'Chủ đề: bảo hành / đổi trả. Thời hạn bảo hành tùy theo sản phẩm. Bạn hãy mở trang chi tiết sản phẩm để xem thông tin bảo hành hoặc chọn “Gặp nhân viên” để được kiểm tra cụ thể.', 1, '2026-10-24 07:05:02'),
+(108, 'warranty', 'Mình đổi trả trong bao nhiêu ngày?', 'Chủ đề: bảo hành / đổi trả. Thời hạn bảo hành tùy theo sản phẩm. Bạn hãy mở trang chi tiết sản phẩm để xem thông tin bảo hành hoặc chọn “Gặp nhân viên” để được kiểm tra cụ thể.', 1, '2026-10-24 07:05:02'),
+(109, 'warranty', 'Sản phẩm lỗi có được đổi mới không?', 'Chủ đề: bảo hành / đổi trả. Thời hạn bảo hành tùy theo sản phẩm. Bạn hãy mở trang chi tiết sản phẩm để xem thông tin bảo hành hoặc chọn “Gặp nhân viên” để được kiểm tra cụ thể.', 1, '2026-10-24 07:05:02'),
+(110, 'warranty', 'Bảo hành có cần giữ hóa đơn không?', 'Chủ đề: bảo hành / đổi trả. Thời hạn bảo hành tùy theo sản phẩm. Bạn hãy mở trang chi tiết sản phẩm để xem thông tin bảo hành hoặc chọn “Gặp nhân viên” để được kiểm tra cụ thể.', 1, '2026-10-24 07:05:02'),
+(111, 'warranty', 'Mang sản phẩm đi bảo hành ở đâu?', 'Chủ đề: bảo hành / đổi trả. Thời hạn bảo hành tùy theo sản phẩm. Bạn hãy mở trang chi tiết sản phẩm để xem thông tin bảo hành hoặc chọn “Gặp nhân viên” để được kiểm tra cụ thể.', 1, '2026-10-24 07:05:02'),
+(112, 'warranty', 'Hàng đã qua sử dụng có bảo hành không?', 'Chủ đề: bảo hành / đổi trả. Thời hạn bảo hành tùy theo sản phẩm. Bạn hãy mở trang chi tiết sản phẩm để xem thông tin bảo hành hoặc chọn “Gặp nhân viên” để được kiểm tra cụ thể.', 1, '2026-10-24 07:05:02'),
+(113, 'warranty', 'Máy bị vào nước có được bảo hành không?', 'Chủ đề: bảo hành / đổi trả. Thời hạn bảo hành tùy theo sản phẩm. Bạn hãy mở trang chi tiết sản phẩm để xem thông tin bảo hành hoặc chọn “Gặp nhân viên” để được kiểm tra cụ thể.', 1, '2026-10-24 07:05:02'),
+(114, 'warranty', 'Tra cứu bảo hành bằng số serial', 'Chủ đề: bảo hành / đổi trả. Thời hạn bảo hành tùy theo sản phẩm. Bạn hãy mở trang chi tiết sản phẩm để xem thông tin bảo hành hoặc chọn “Gặp nhân viên” để được kiểm tra cụ thể.', 1, '2026-10-24 07:05:02'),
+(115, 'warranty', 'Thời gian xử lý bảo hành là bao lâu?', 'Chủ đề: bảo hành / đổi trả. Thời hạn bảo hành tùy theo sản phẩm. Bạn hãy mở trang chi tiết sản phẩm để xem thông tin bảo hành hoặc chọn “Gặp nhân viên” để được kiểm tra cụ thể.', 1, '2026-10-24 07:05:02'),
+(116, 'warranty', 'Mình muốn trả hàng hoàn tiền', 'Chủ đề: bảo hành / đổi trả. Thời hạn bảo hành tùy theo sản phẩm. Bạn hãy mở trang chi tiết sản phẩm để xem thông tin bảo hành hoặc chọn “Gặp nhân viên” để được kiểm tra cụ thể.', 1, '2026-10-24 07:05:02'),
+(117, 'warranty', 'Sản phẩm giao tới bị hỏng thì làm gì?', 'Chủ đề: bảo hành / đổi trả. Thời hạn bảo hành tùy theo sản phẩm. Bạn hãy mở trang chi tiết sản phẩm để xem thông tin bảo hành hoặc chọn “Gặp nhân viên” để được kiểm tra cụ thể.', 1, '2026-10-24 07:05:02'),
+(118, 'warranty', 'Bảo hành tai nghe bao lâu?', 'Chủ đề: bảo hành / đổi trả. Thời hạn bảo hành tùy theo sản phẩm. Bạn hãy mở trang chi tiết sản phẩm để xem thông tin bảo hành hoặc chọn “Gặp nhân viên” để được kiểm tra cụ thể.', 1, '2026-10-24 07:05:02'),
+(119, 'warranty', 'Điều kiện đổi trả là gì?', 'Chủ đề: bảo hành / đổi trả. Thời hạn bảo hành tùy theo sản phẩm. Bạn hãy mở trang chi tiết sản phẩm để xem thông tin bảo hành hoặc chọn “Gặp nhân viên” để được kiểm tra cụ thể.', 1, '2026-10-24 07:05:02');
 
 -- --------------------------------------------------------
 
@@ -257,7 +390,13 @@ INSERT INTO `chatbot_messages` (`id`, `conversation_id`, `sender`, `message`, `c
 (4, '5c251dc2-5598-45a8-96d7-c67c5a275570', 'visitor', 'Laptop', '2026-10-22 23:23:13'),
 (5, '5c251dc2-5598-45a8-96d7-c67c5a275570', 'bot', 'Mình đã phân loại yêu cầu: Laptop.\nMình tìm thấy 3 sản phẩm đang bán:\n• Laptop Acer Gaming Nitro ProPanel ANV15-42-R9EH — 30.616.000 ₫\n• Laptop ASUS ExpertBook P1 P1403CVAY-716D4-63WS — 25.897.000 ₫\n• Laptop ASUS ExpertBook P1 P1503CVAY-516D4-63WS — 21.580.000 ₫', '2026-10-22 23:23:14'),
 (6, 'f0db3d8f-790a-4266-828b-4cbedcf6edb1', 'visitor', 'Laptop khoảng 20 triệu', '2026-10-22 23:23:22'),
-(7, 'f0db3d8f-790a-4266-828b-4cbedcf6edb1', 'bot', 'Mình đã phân loại yêu cầu: Laptop · tối đa 20.000.000 ₫.\nMình tìm thấy 3 sản phẩm đang bán:\n• Laptop Huawei Matebook D14 — 8.468.000 ₫\n• Laptop Thunderobot T-Book 15A — 11.953.000 ₫\n• Laptop Thunderobot T-Book 15N — 17.650.000 ₫', '2026-10-22 23:23:23');
+(7, 'f0db3d8f-790a-4266-828b-4cbedcf6edb1', 'bot', 'Mình đã phân loại yêu cầu: Laptop · tối đa 20.000.000 ₫.\nMình tìm thấy 3 sản phẩm đang bán:\n• Laptop Huawei Matebook D14 — 8.468.000 ₫\n• Laptop Thunderobot T-Book 15A — 11.953.000 ₫\n• Laptop Thunderobot T-Book 15N — 17.650.000 ₫', '2026-10-22 23:23:23'),
+(8, '04b06730-3f17-4c38-bebc-098a866e2cdf', 'visitor', 'Tư vấn cấu hình', '2026-10-23 02:57:49'),
+(9, '04b06730-3f17-4c38-bebc-098a866e2cdf', 'bot', 'Mình sẽ tách nhu cầu thành loại thiết bị, ngân sách và mục đích sử dụng. Bạn đang tìm laptop, điện thoại hay máy tính bảng? Ví dụ: “laptop khoảng 20 triệu để học tập”.', '2026-10-23 02:57:50'),
+(10, '04b06730-3f17-4c38-bebc-098a866e2cdf', 'visitor', '50 triệu gaming', '2026-10-23 02:58:00'),
+(11, '04b06730-3f17-4c38-bebc-098a866e2cdf', 'bot', 'Mình sẽ tách nhu cầu thành loại thiết bị, ngân sách và mục đích sử dụng. Bạn đang tìm laptop, điện thoại hay máy tính bảng? Ví dụ: “laptop khoảng 20 triệu để học tập”.', '2026-10-23 02:58:01'),
+(12, '04b06730-3f17-4c38-bebc-098a866e2cdf', 'visitor', 'laptop khoảng 20 triệu để game', '2026-10-23 02:58:21'),
+(13, '04b06730-3f17-4c38-bebc-098a866e2cdf', 'bot', 'Mình đã phân loại yêu cầu: Laptop · tối đa 20.000.000 ₫ · chơi game.\nMình tìm thấy 3 sản phẩm đang bán:\n• Laptop Huawei Matebook D14 — 8.468.000 ₫\n• Laptop Thunderobot T-Book 15A — 11.953.000 ₫\n• Laptop Thunderobot T-Book 15N — 17.650.000 ₫', '2026-10-23 02:58:21');
 
 -- --------------------------------------------------------
 
@@ -288,6 +427,15 @@ CREATE TABLE `chi_tiet_don_hang` (
   `thong_so_snapshot` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Đang đổ dữ liệu cho bảng `chi_tiet_don_hang`
+--
+
+INSERT INTO `chi_tiet_don_hang` (`ma_dh`, `ma_sp`, `so_luong`, `don_gia`, `ten_sp_snapshot`, `thong_so_snapshot`) VALUES
+('DHDEMO0001', 'DEMO000001', 1, 18990000, 'Laptop TechStore Core i5 16GB 512GB', 'Sản phẩm mẫu TechStore'),
+('DHDEMO0002', 'DEMO000002', 1, 12990000, 'Điện thoại TechStore Nova 256GB', 'Sản phẩm mẫu TechStore'),
+('KQHFA8GBQ4', '2EE4F02E69', 1, 30616000, 'Laptop Acer Gaming Nitro ProPanel ANV15-42-R9EH', '{\"cpu\":\"AMD Ryzen 7 7445HS (6 lõi \\/ 12 luồng, Base Clock: 3.55 GHz, Max. Boost Clock: Up to 4.7 GHz, L2 Cache: 6 MB; L3 Cache: 16 MB)\",\"ram\":\"16GB | DDR5 Up to 5600 MHz | 2 khe (1 x 16GB, nâng cấp tối đa 96GB)\",\"storage\":\"512GB PCIe NVMe SSD (Nâng cấp tối đa 4TB)\",\"graphics\":\"NVIDIA GeForce RTX 4050 6GB GDDR6 VRAM, hỗ trợ 2560 NVIDIA CUDA Cores\",\"display\":\"Độ sáng 300 nits: Độ phủ màu 100% sRGB: Thời gian phản hồi: 3ms (Overdrive): Acer ComfyView LED-backlit TFT LCD: Tỉ lệ màn hình: 16:9 | 15.6 inches | 1920 x 1080 pixels (FullHD)\",\"battery\":\"57 Wh 4-cell Li-ion batter: 135W 5.5PHY Adapter\",\"operating_system\":\"Windows 11 Home Single Language\",\"dimensions\":\"Kích thước màn hình: 15.6 inches\",\"raw\":\"Loại card đồ họa: NVIDIA GeForce RTX 4050 6GB GDDR6 VRAM, hỗ trợ 2560 NVIDIA CUDA Cores | Dung lượng RAM: 16GB | Loại RAM: DDR5 Up to 5600 MHz | Số khe ram: 2 khe (1 x 16GB, nâng cấp tối đa 96GB) | Ổ cứng: 512GB PCIe NVMe SSD (Nâng cấp tối đa 4TB) | Công nghệ màn hình: Độ sáng 300 nits: Độ phủ màu 100% sRGB: Thời gian phản hồi: 3ms (Overdrive): Acer ComfyView LED-backlit TFT LCD: Tỉ lệ màn hình: 16:9 | Hệ điều hành khi ra mắt: Windows 11 Home Single Language | Loại CPU: AMD Ryzen 7 7445HS (6 lõi \\/ 12 luồng, Base Clock: 3.55 GHz, Max. Boost Clock: Up to 4.7 GHz, L2 Cache: 6 MB; L3 Cache: 16 MB) | Kích thước màn hình: 15.6 inches | Độ phân giải màn hình: 1920 x 1080 pixels (FullHD) | Pin: 57 Wh 4-cell Li-ion batter: 135W 5.5PHY Adapter | Cổng giao tiếp: 1 x USB-C USB4 40Gbps (DisplayPort 2.1 qua dGPU, sạc 5V\\/3A): 1 x USB-A 3.2 Gen 1 (hỗ trợ sạc khi tắt máy): 2 x USB-A 3.2 Gen 1: 1 x HDMI 2.1 (HDCP): 1 x Jack tai nghe\\/loa 3.5 mm (hỗ trợ mic tích hợp): 1 x RJ-45 (Ethernet): 1 x Cổng nguồn\"}');
+
 -- --------------------------------------------------------
 
 --
@@ -301,6 +449,13 @@ CREATE TABLE `chi_tiet_gio_hang` (
   `gia` decimal(10,0) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Đang đổ dữ liệu cho bảng `chi_tiet_gio_hang`
+--
+
+INSERT INTO `chi_tiet_gio_hang` (`ma_cart`, `ma_sp`, `so_luong`, `gia`) VALUES
+('CART-DEMO-000001', 'DEMO000001', 1, 18990000);
+
 -- --------------------------------------------------------
 
 --
@@ -313,6 +468,13 @@ CREATE TABLE `chi_tiet_phieu_nhap` (
   `so_luong` int(11) NOT NULL,
   `gia_nhap` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `chi_tiet_phieu_nhap`
+--
+
+INSERT INTO `chi_tiet_phieu_nhap` (`id_phieu_nhap`, `ma_sp`, `so_luong`, `gia_nhap`) VALUES
+('PNDEMO0001', 'DEMO000001', 12, 15000000.00);
 
 -- --------------------------------------------------------
 
@@ -332,6 +494,13 @@ CREATE TABLE `chi_tiet_san_pham` (
   `chi_tiet` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Đang đổ dữ liệu cho bảng `chi_tiet_san_pham`
+--
+
+INSERT INTO `chi_tiet_san_pham` (`ma_sp`, `cpu`, `ram`, `rom`, `gpu`, `man_hinh`, `he_dieu_hanh`, `mau_sac`, `chi_tiet`) VALUES
+('DEMO000001', 'CPUDEMO001', 'RAMDEMO001', 'ROMDEMO001', 'GPUDEMO001', 'MHDEMO001', 'HDHDEMO001', 'MAUDEMO001', 'Laptop mẫu: Core i5, RAM 16GB, SSD 512GB, màn hình IPS 15.6 inch.');
+
 -- --------------------------------------------------------
 
 --
@@ -343,6 +512,13 @@ CREATE TABLE `cpu` (
   `ten_cpu` varchar(100) NOT NULL,
   `mo_ta` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `cpu`
+--
+
+INSERT INTO `cpu` (`ma_cpu`, `ten_cpu`, `mo_ta`) VALUES
+('CPUDEMO001', 'Intel Core i5 Demo', 'Bộ xử lý mẫu cho laptop văn phòng.');
 
 -- --------------------------------------------------------
 
@@ -358,6 +534,14 @@ CREATE TABLE `cua_hang` (
   `trang_thai` tinyint(1) DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Đang đổ dữ liệu cho bảng `cua_hang`
+--
+
+INSERT INTO `cua_hang` (`id_cua_hang`, `ten_cua_hang`, `dia_chi`, `dien_thoai`, `trang_thai`) VALUES
+(1, 'TechStore Quận 1', '123 Nguyễn Trãi, Quận 1, TP. Hồ Chí Minh', '02838220001', 1),
+(2, 'TechStore Thủ Đức', '45 Võ Văn Ngân, TP. Thủ Đức, TP. Hồ Chí Minh', '02838220002', 1);
+
 -- --------------------------------------------------------
 
 --
@@ -372,6 +556,15 @@ CREATE TABLE `danh_gia` (
   `binh_luan` text DEFAULT NULL,
   `thoi_gian_tao` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `danh_gia`
+--
+
+INSERT INTO `danh_gia` (`id_danh_gia`, `ma_sp`, `ma_kh`, `so_sao`, `binh_luan`, `thoi_gian_tao`) VALUES
+(1, 'DEMO000001', 'KHDEMO000001', 5, 'ĐÁNH GIÁ MẪU — Nội dung minh họa, không phải phản hồi khách hàng thật về Laptop TechStore Core i5 16GB 512GB.', '2026-10-24 03:04:49'),
+(2, 'DEMO000002', 'KHDEMO000001', 5, 'ĐÁNH GIÁ MẪU — Nội dung minh họa, không phải phản hồi khách hàng thật về Điện thoại TechStore Nova 256GB.', '2026-10-24 03:04:49'),
+(3, 'DEMO000003', 'KHDEMO000001', 5, 'ĐÁNH GIÁ MẪU — Nội dung minh họa, không phải phản hồi khách hàng thật về Tai nghe không dây TechStore Air.', '2026-10-24 03:04:49');
 
 -- --------------------------------------------------------
 
@@ -399,7 +592,10 @@ INSERT INTO `danh_gia_mau` (`id_danh_gia_mau`, `ma_sp`, `name`, `rating`, `conte
 (3, 'D1ACA5603B', 'TechStore · đánh giá mẫu', 5, 'ĐÁNH GIÁ MẪU — Nội dung minh họa giao diện, không phải phản hồi của khách hàng thật về Tai nghe Bluetooth thể thao Anker Soundcore C50i.', '2026-10-22 21:47:46', '2026-10-22 21:47:46'),
 (4, '3D95FABE2C', 'TechStore · đánh giá mẫu', 5, 'ĐÁNH GIÁ MẪU — Nội dung minh họa giao diện, không phải phản hồi của khách hàng thật về Tai nghe Bluetooth True Wireless Anker Soundcore Liberty 5 Pro.', '2026-10-22 22:19:12', '2026-10-22 22:19:12'),
 (5, '2476C276CF', 'TechStore · đánh giá mẫu', 5, 'ĐÁNH GIÁ MẪU — Nội dung minh họa giao diện, không phải phản hồi của khách hàng thật về Tai nghe Bluetooth True Wireless Anker Soundcore R60i NC.', '2026-10-22 22:19:12', '2026-10-22 22:19:12'),
-(6, 'B5B54C4472', 'TechStore · đánh giá mẫu', 5, 'ĐÁNH GIÁ MẪU — Nội dung minh họa giao diện, không phải phản hồi của khách hàng thật về Tai nghe không dây Anker Soundcore Aeroclip 2.', '2026-10-22 22:19:12', '2026-10-22 22:19:12');
+(6, 'B5B54C4472', 'TechStore · đánh giá mẫu', 5, 'ĐÁNH GIÁ MẪU — Nội dung minh họa giao diện, không phải phản hồi của khách hàng thật về Tai nghe không dây Anker Soundcore Aeroclip 2.', '2026-10-22 22:19:12', '2026-10-22 22:19:12'),
+(7, 'DEMO000001', 'TechStore · đánh giá mẫu', 5, 'ĐÁNH GIÁ MẪU — Nội dung minh họa giao diện, không phải phản hồi khách hàng thật về Laptop TechStore Core i5 16GB 512GB.', '2026-10-23 20:04:49', '2026-10-23 20:04:49'),
+(8, 'DEMO000002', 'TechStore · đánh giá mẫu', 5, 'ĐÁNH GIÁ MẪU — Nội dung minh họa giao diện, không phải phản hồi khách hàng thật về Điện thoại TechStore Nova 256GB.', '2026-10-23 20:04:49', '2026-10-23 20:04:49'),
+(9, 'DEMO000003', 'TechStore · đánh giá mẫu', 5, 'ĐÁNH GIÁ MẪU — Nội dung minh họa giao diện, không phải phản hồi khách hàng thật về Tai nghe không dây TechStore Air.', '2026-10-23 20:04:49', '2026-10-23 20:04:49');
 
 -- --------------------------------------------------------
 
@@ -420,6 +616,14 @@ CREATE TABLE `dia_chi` (
   `so_dien_thoai` varchar(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Đang đổ dữ liệu cho bảng `dia_chi`
+--
+
+INSERT INTO `dia_chi` (`ma_kh`, `loai_dia_chi`, `dia_chi_giao_hang`, `chi_tiet_dia_chi`, `thanh_pho`, `quan_huyen`, `phuong_xa`, `ghi_chu`, `ten_nguoi_nhan`, `so_dien_thoai`) VALUES
+('KHDEMO000001', 'Nha', 'Nha', '12 Lê Lợi, Phường Bến Nghé', 'TP. Hồ Chí Minh', 'Quận 1', 'Phường Bến Nghé', NULL, 'Nguyễn Minh Anh', '0901000001'),
+('KHDEMO000002', 'Nha', 'Nha', '80 Võ Văn Ngân, Phường Bình Thọ', 'TP. Hồ Chí Minh', 'TP. Thủ Đức', 'Phường Bình Thọ', NULL, 'Trần Quốc Bảo', '0901000002');
+
 -- --------------------------------------------------------
 
 --
@@ -439,8 +643,21 @@ CREATE TABLE `don_hang` (
   `ma_voucher` varchar(40) DEFAULT NULL,
   `tien_giam` decimal(12,0) NOT NULL DEFAULT 0,
   `id_cua_hang` int(11) DEFAULT NULL,
-  `nhan_vien_id` varchar(20) DEFAULT NULL
+  `nhan_vien_id` varchar(20) DEFAULT NULL,
+  `don_vi_van_chuyen` varchar(100) DEFAULT NULL,
+  `ma_van_don` varchar(100) DEFAULT NULL,
+  `ngay_giao_du_kien` date DEFAULT NULL,
+  `loai_uu_dai` varchar(40) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `don_hang`
+--
+
+INSERT INTO `don_hang` (`ma_dh`, `ma_kh`, `ngay_dat`, `tong_tien`, `trang_thai`, `ten_nguoi_nhan`, `dien_thoai_nguoi_nhan`, `dia_chi_giao_hang`, `idempotency_key`, `ma_voucher`, `tien_giam`, `id_cua_hang`, `nhan_vien_id`, `don_vi_van_chuyen`, `ma_van_don`, `ngay_giao_du_kien`, `loai_uu_dai`) VALUES
+('DHDEMO0001', 'KHDEMO000001', '2026-10-23', 18990000, 'Da Giao', 'Nguyễn Minh Anh', '0901000001', '12 Lê Lợi, Phường Bến Nghé, Quận 1, TP. Hồ Chí Minh', 'demo-order-DHDEMO0001', NULL, 0, 1, '0306241125', NULL, NULL, NULL, NULL),
+('DHDEMO0002', 'KHDEMO000002', '2026-10-22', 12490000, 'Dang Giao', 'Trần Quốc Bảo', '0901000002', '80 Võ Văn Ngân, Phường Bình Thọ, TP. Thủ Đức', 'demo-order-DHDEMO0002', 'WELCOME10', 500000, 2, '0306241131', NULL, NULL, NULL, NULL),
+('KQHFA8GBQ4', 'KHYVNNDQNV4Z1H', '2026-10-23', 30616000, 'huy', 'QuanLe', '011111111111', 'hbkha, lblhb, blkhbkh, khbvkhb', 'bd573b99-c99b-4e40-b846-ae4a83723b28', NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -470,6 +687,14 @@ CREATE TABLE `gio_hang` (
   `ngay_tao` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Đang đổ dữ liệu cho bảng `gio_hang`
+--
+
+INSERT INTO `gio_hang` (`ma_cart`, `ma_kh`, `ngay_tao`) VALUES
+('0RWMSUY1Z0DY0APTCNKL', 'KHYVNNDQNV4Z1H', '2026-10-23'),
+('CART-DEMO-000001', 'KHDEMO000001', '2026-10-24');
+
 -- --------------------------------------------------------
 
 --
@@ -483,6 +708,13 @@ CREATE TABLE `gpu` (
   `mo_ta` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Đang đổ dữ liệu cho bảng `gpu`
+--
+
+INSERT INTO `gpu` (`ma_gpu`, `ten_gpu`, `loai_gpu`, `mo_ta`) VALUES
+('GPUDEMO001', 'Intel Iris Xe Graphics', 'Tích hợp', 'Đồ họa tích hợp mẫu.');
+
 -- --------------------------------------------------------
 
 --
@@ -494,6 +726,13 @@ CREATE TABLE `he_dieu_hanh` (
   `ten_hdh` varchar(100) NOT NULL,
   `phien_ban` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `he_dieu_hanh`
+--
+
+INSERT INTO `he_dieu_hanh` (`ma_hdh`, `ten_hdh`, `phien_ban`) VALUES
+('HDHDEMO001', 'Windows', '11 Home');
 
 -- --------------------------------------------------------
 
@@ -510,6 +749,13 @@ CREATE TABLE `jobs` (
   `available_at` int(10) UNSIGNED NOT NULL,
   `created_at` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `jobs`
+--
+
+INSERT INTO `jobs` (`id`, `queue`, `payload`, `attempts`, `reserved_at`, `available_at`, `created_at`) VALUES
+(1, 'default', '{\"uuid\":\"09e83d0a-eb5c-4e44-966f-4533a11c79c2\",\"displayName\":\"App\\\\Mail\\\\WelcomeCustomer\",\"job\":\"Illuminate\\\\Queue\\\\CallQueuedHandler@call\",\"maxTries\":null,\"maxExceptions\":null,\"failOnTimeout\":false,\"backoff\":null,\"timeout\":null,\"retryUntil\":null,\"data\":{\"commandName\":\"Illuminate\\\\Mail\\\\SendQueuedMailable\",\"command\":\"O:34:\\\"Illuminate\\\\Mail\\\\SendQueuedMailable\\\":17:{s:8:\\\"mailable\\\";O:24:\\\"App\\\\Mail\\\\WelcomeCustomer\\\":3:{s:12:\\\"customerName\\\";s:6:\\\"QuanLe\\\";s:2:\\\"to\\\";a:1:{i:0;a:2:{s:4:\\\"name\\\";N;s:7:\\\"address\\\";s:17:\\\"aomachx@gmail.com\\\";}}s:6:\\\"mailer\\\";s:3:\\\"log\\\";}s:5:\\\"tries\\\";N;s:7:\\\"timeout\\\";N;s:13:\\\"maxExceptions\\\";N;s:17:\\\"shouldBeEncrypted\\\";b:0;s:10:\\\"connection\\\";N;s:5:\\\"queue\\\";N;s:12:\\\"messageGroup\\\";N;s:12:\\\"deduplicator\\\";N;s:5:\\\"delay\\\";N;s:11:\\\"afterCommit\\\";N;s:10:\\\"middleware\\\";a:0:{}s:7:\\\"chained\\\";a:0:{}s:15:\\\"chainConnection\\\";N;s:10:\\\"chainQueue\\\";N;s:19:\\\"chainCatchCallbacks\\\";N;s:3:\\\"job\\\";N;}\",\"batchId\":null},\"createdAt\":1792749562,\"delay\":null}', 0, NULL, 1792749562, 1792749562);
 
 -- --------------------------------------------------------
 
@@ -545,6 +791,13 @@ CREATE TABLE `khuyen_mai` (
   `trang_thai` tinyint(1) DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Đang đổ dữ liệu cho bảng `khuyen_mai`
+--
+
+INSERT INTO `khuyen_mai` (`id_khuyen_mai`, `tieu_de`, `mo_ta`, `ngay_bat_dau`, `ngay_ket_thuc`, `trang_thai`) VALUES
+(990001, 'Ưu đãi thiết bị công nghệ', 'Chương trình khuyến mãi mẫu phục vụ kiểm thử.', '2026-10-23 03:04:49', '2026-11-23 03:04:49', 1);
+
 -- --------------------------------------------------------
 
 --
@@ -560,6 +813,13 @@ CREATE TABLE `lich_su_su_dung_voucher` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Đang đổ dữ liệu cho bảng `lich_su_su_dung_voucher`
+--
+
+INSERT INTO `lich_su_su_dung_voucher` (`id`, `code`, `ma_kh`, `ma_dh`, `discount_amount`, `created_at`) VALUES
+(1, 'WELCOME10', 'KHDEMO000002', 'DHDEMO0002', 500000, '2026-10-23 20:04:48');
+
 -- --------------------------------------------------------
 
 --
@@ -574,6 +834,13 @@ CREATE TABLE `man_hinh` (
   `cong_nghe` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Đang đổ dữ liệu cho bảng `man_hinh`
+--
+
+INSERT INTO `man_hinh` (`ma_mh`, `kich_thuoc`, `do_phan_giai`, `tan_so`, `cong_nghe`) VALUES
+('MHDEMO001', '15.6 inch', '1920x1080', '60Hz', 'IPS');
+
 -- --------------------------------------------------------
 
 --
@@ -585,6 +852,13 @@ CREATE TABLE `mau_sac` (
   `ten_mau` varchar(50) NOT NULL,
   `ma_hex` varchar(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `mau_sac`
+--
+
+INSERT INTO `mau_sac` (`ma_mau`, `ten_mau`, `ma_hex`) VALUES
+('MAUDEMO001', 'Bạc', '#C0C0C0');
 
 -- --------------------------------------------------------
 
@@ -614,7 +888,12 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (9, '2026_10_23_000004_fix_product_column_constraints', 2),
 (10, '2026_10_23_000005_create_demo_product_reviews', 3),
 (11, '2026_10_23_000006_create_chatbot_huan_luyen', 4),
-(12, '2026_10_23_000007_add_catalog_composite_indexes', 5);
+(12, '2026_10_23_000007_add_catalog_composite_indexes', 5),
+(13, '2026_10_23_000008_create_customer_notifications', 6),
+(14, '2026_10_23_000009_add_support_assignment_and_inventory_history', 6),
+(15, '2026_10_23_000010_add_fulfillment_and_returns', 7),
+(16, '2026_10_23_000011_add_customer_promotions', 8),
+(17, '2026_10_23_000012_require_education_discount_review', 9);
 
 -- --------------------------------------------------------
 
@@ -631,6 +910,15 @@ CREATE TABLE `nguoi_dung` (
   `so_dien_thoai` varchar(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Đang đổ dữ liệu cho bảng `nguoi_dung`
+--
+
+INSERT INTO `nguoi_dung` (`ma_kh`, `ten_dang_nhap`, `email`, `mat_khau`, `ten_khach_hang`, `so_dien_thoai`) VALUES
+('KHDEMO000001', 'minhanh.demo', 'minhanh.demo@example.test', '$2y$12$t.hNh2T9MT69Hkbs4cpoqevWH1ZhlYDTB8qgCVLeZXKohPClmMW9S', 'Nguyễn Minh Anh', '0901000001'),
+('KHDEMO000002', 'quocbao.demo', 'quocbao.demo@example.test', '$2y$12$GnsrOy4WrDQXCXPEI/5U2ea3k7UUP6of7Rh5LIzJcNIqHDHH/znbK', 'Trần Quốc Bảo', '0901000002'),
+('KHYVNNDQNV4Z1H', 'aomachx', 'aomachx@gmail.com', '$2y$12$es.uca6cfxrOM6qK.UQ7TeZVIIcdXIDIWPJw8Xf8aCQezc6yUCE7.', 'QuanLe', '011111111111');
+
 -- --------------------------------------------------------
 
 --
@@ -645,6 +933,48 @@ CREATE TABLE `nhat_ky_hoat_dong` (
   `dia_chi_ip` varchar(45) DEFAULT NULL,
   `thoi_gian_tao` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `nhat_ky_hoat_dong`
+--
+
+INSERT INTO `nhat_ky_hoat_dong` (`id_nhat_ky`, `tk_admin`, `hanh_dong`, `chi_tiet`, `dia_chi_ip`, `thoi_gian_tao`) VALUES
+(1, 'chat_test_admin', 'chat.training.create', '31', '127.0.0.1', '2026-10-23 00:39:31'),
+(2, 'chat_test_admin', 'chat.training.update', '31', '127.0.0.1', '2026-10-23 00:39:31'),
+(3, 'chat_test_admin', 'chat.training.delete', '31', '127.0.0.1', '2026-10-23 00:39:37'),
+(4, 'chat_test_admin', 'chat.training.create', '32', '127.0.0.1', '2026-10-23 00:39:56'),
+(5, 'chat_test_admin', 'chat.training.update', '32', '127.0.0.1', '2026-10-23 00:39:57'),
+(6, 'chat_test_admin', 'chat.training.delete', '32', '127.0.0.1', '2026-10-23 00:40:02'),
+(7, 'chat_test_admin', 'chat.training.create', '33', '127.0.0.1', '2026-10-23 00:40:19'),
+(8, 'chat_test_admin', 'chat.training.update', '33', '127.0.0.1', '2026-10-23 00:40:20'),
+(9, 'chat_test_admin', 'chat.training.delete', '33', '127.0.0.1', '2026-10-23 00:40:20'),
+(10, 'QuanDev', 'seed.demo-data', 'Khởi tạo dữ liệu mẫu TechStore.', '127.0.0.1', '2026-10-24 03:04:49');
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `nhat_ky_ton_kho`
+--
+
+CREATE TABLE `nhat_ky_ton_kho` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `ma_sp` varchar(20) NOT NULL,
+  `id_cua_hang` bigint(20) UNSIGNED NOT NULL,
+  `tk_admin` varchar(20) NOT NULL,
+  `ton_cu` int(10) UNSIGNED NOT NULL,
+  `ton_moi` int(10) UNSIGNED NOT NULL,
+  `dia_chi_ip` varchar(45) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `nhat_ky_ton_kho`
+--
+
+INSERT INTO `nhat_ky_ton_kho` (`id`, `ma_sp`, `id_cua_hang`, `tk_admin`, `ton_cu`, `ton_moi`, `dia_chi_ip`, `created_at`) VALUES
+(1, 'DEMO000001', 1, 'QuanDev', 0, 11, '127.0.0.1', '2026-10-23 20:04:47'),
+(2, 'DEMO000002', 2, 'QuanDev', 0, 18, '127.0.0.1', '2026-10-23 20:04:47'),
+(3, 'DEMO000003', 1, 'QuanDev', 0, 30, '127.0.0.1', '2026-10-23 20:04:47');
 
 -- --------------------------------------------------------
 
@@ -662,6 +992,16 @@ CREATE TABLE `nhat_ky_trang_thai_don` (
   `nguoi_thuc_hien` varchar(60) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Đang đổ dữ liệu cho bảng `nhat_ky_trang_thai_don`
+--
+
+INSERT INTO `nhat_ky_trang_thai_don` (`id_nhat_ky`, `ma_dh`, `trang_thai`, `ghi_chu`, `thoi_gian_tao`, `trang_thai_cu`, `nguoi_thuc_hien`) VALUES
+(1, 'KQHFA8GBQ4', 'Cho xac nhan', 'Khách hàng đặt đơn.', '2026-10-23 02:59:47', NULL, 'customer:KHYVNNDQNV4Z1H'),
+(2, 'KQHFA8GBQ4', 'huy', 'Khách hàng hủy đơn trước khi xác nhận.', '2026-10-23 07:20:07', 'Cho xac nhan', 'customer:KHYVNNDQNV4Z1H'),
+(3, 'DHDEMO0001', 'Da Giao', 'Cập nhật trạng thái đơn hàng mẫu.', '2026-10-22 20:04:48', 'Cho xac nhan', '0306241125'),
+(4, 'DHDEMO0002', 'Dang Giao', 'Cập nhật trạng thái đơn hàng mẫu.', '2026-10-21 20:04:48', 'Cho xac nhan', '0306241131');
+
 -- --------------------------------------------------------
 
 --
@@ -676,6 +1016,13 @@ CREATE TABLE `nha_cung_cap` (
   `email` varchar(255) DEFAULT NULL,
   `dia_chi` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `nha_cung_cap`
+--
+
+INSERT INTO `nha_cung_cap` (`id_nha_cung_cap`, `ten_nha_cung_cap`, `nguoi_lien_he`, `dien_thoai`, `email`, `dia_chi`) VALUES
+(1, 'Nhà phân phối Công nghệ Việt', 'Bộ phận kinh doanh', '02839000001', 'sales@supplier.example.test', 'Quận 10, TP. Hồ Chí Minh');
 
 -- --------------------------------------------------------
 
@@ -709,6 +1056,13 @@ CREATE TABLE `phieu_giam_gia` (
   `trang_thai` tinyint(1) DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Đang đổ dữ liệu cho bảng `phieu_giam_gia`
+--
+
+INSERT INTO `phieu_giam_gia` (`id_voucher`, `ma_code`, `loai_giam`, `gia_tri_giam`, `gia_tri_don_toi_thieu`, `giam_toi_da`, `so_luong`, `da_dung`, `ngay_bat_dau`, `ngay_ket_thuc`, `trang_thai`) VALUES
+(1, 'WELCOME10', 'percentage', 10.00, 1000000.00, 500000.00, 100, 1, '2026-10-23 03:04:48', '2026-11-23 03:04:48', 1);
+
 -- --------------------------------------------------------
 
 --
@@ -724,6 +1078,13 @@ CREATE TABLE `phieu_nhap_kho` (
   `reference` varchar(100) DEFAULT NULL,
   `id_cua_hang` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `phieu_nhap_kho`
+--
+
+INSERT INTO `phieu_nhap_kho` (`id_phieu_nhap`, `id_nha_cung_cap`, `tk_admin`, `tong_chi_phi`, `ngay_nhap`, `reference`, `id_cua_hang`) VALUES
+('PNDEMO0001', 1, 'QuanDev', 227880000.00, '2026-10-13 20:04:48', 'DEMO-RECEIPT-0001', 1);
 
 -- --------------------------------------------------------
 
@@ -745,7 +1106,14 @@ CREATE TABLE `quan_tri` (
 --
 
 INSERT INTO `quan_tri` (`tk_admin`, `mat_khau`, `ten_admin`, `email`, `role`, `id_cua_hang`) VALUES
-('chat_test_admin', '$2y$12$U5q0xG/cx7c2vhf/H1Nga.Aa97p8XdoBA5CqvTUSyk4xZgnUO0ogC', 'Chat Test Admin', 'chat-test-admin@techstore.local', 'chu_quan', NULL);
+('0306241090', '$2y$12$K6DhYnjWt7bO.YKRrU3J6um7ptbT3yg2o0ghTLWcB8HENP9jlw17S', 'Ngô Gia Bảo', '0306241090@caothang.edu.vn', 'chu_doanh_nghiep', NULL),
+('0306241102', '$2y$12$UQY2QEJnWG.PicpWB6PJSebzS5AahEt4WX2VEnZcI5YxSWVMhINoa', 'Nguyễn Quốc Đương', '0306241102@caothang.edu.vn', 'giam_doc_chi_nhanh', 1),
+('0306241125', '$2y$12$qUL6zK152PaxNyChprbweuJ82niJNbP7zVrdkk8.Jff6LJIW74AVS', 'Đặng Duy Lam', '0306241125@caothang.edu.vn', 'nhan_vien', 1),
+('0306241126', '$2y$12$TKHyXC/2Xo27A/owpgNai.326ZgQ1hmweR3ksWGvJEOU0jnmXvCby', 'Nguyễn Hoài Linh', '0306241126@caothang.edu.vn', 'giam_doc_chi_nhanh', 2),
+('0306241131', '$2y$12$8AhBWoTMN3xgWzHLqoextu3pE.osGsY7qOrK683EvJLyymFyPYAfW', 'Trần Văn Ngọc', '0306241131@caothang.edu.vn', 'nhan_vien', 2),
+('0306241145', '$2y$12$skFuk0ehRo8dHGttN39bQumugZG6.bMtFMu1cm4a/l5ezrCwJFWq2', 'Lê Minh Tài', '0306241145@caothang.edu.vn', 'giam_doc_chi_nhanh', 1),
+('chat_test_admin', '$2y$12$U5q0xG/cx7c2vhf/H1Nga.Aa97p8XdoBA5CqvTUSyk4xZgnUO0ogC', 'Chat Test Admin', 'chat-test-admin@techstore.local', 'chu_quan', NULL),
+('QuanDev', '$2y$12$OVpazBF14n8TtZond5BnFOEGmQj97QynrkyApH.83Dvw9t8N1GGLy', 'QuanDev', '0306241143@caothang.edu.vn', 'chu_quan', NULL);
 
 -- --------------------------------------------------------
 
@@ -760,6 +1128,13 @@ CREATE TABLE `ram` (
   `toc_do` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Đang đổ dữ liệu cho bảng `ram`
+--
+
+INSERT INTO `ram` (`ma_ram`, `dung_luong`, `loai_ram`, `toc_do`) VALUES
+('RAMDEMO001', '16GB', 'DDR5', '5200MHz');
+
 -- --------------------------------------------------------
 
 --
@@ -772,6 +1147,13 @@ CREATE TABLE `rom` (
   `loai_rom` varchar(50) DEFAULT NULL,
   `mo_ta` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `rom`
+--
+
+INSERT INTO `rom` (`ma_rom`, `dung_luong`, `loai_rom`, `mo_ta`) VALUES
+('ROMDEMO001', '512GB', 'SSD NVMe', 'Ổ cứng mẫu.');
 
 -- --------------------------------------------------------
 
@@ -4882,6 +5264,9 @@ INSERT INTO `san_pham` (`ma_sp`, `ten_sp`, `loai`, `thuong_hieu`, `mo_ta`, `gia_
 ('DEB18CD750', 'Laptop HP 15-DY2095WM 47X70UA - Cũ Xước Cấn', 'Laptop', 'HP', 'Mua ngay Laptop HP 15-DY2095WM 47X70UA cũ giá rẻ - Nguồn gốc rõ ràng, bảo hành 6-12 tháng, đổi mới 30 ngày, luôn xuất bán đầy đủ VAT.', 0, 115, 2814, 'laptop-hp-15-dy2095wm-47x70ua-cu-xuoc-can-DEB18CD750', 'draft', 0, 'https://cellphones.com.vn/laptop-hp-15-dy2095wm-47x70ua-cu-xuoc-can.html', '{\"cpu\":\"Intel® Core™ i5-1135G7 (up to 4.2 GHz, 8 MB L3 cache, 4 nhân)\",\"ram\":\"8GB | 8GB DDR4-2666 MHz RAM (2 x 4GB)\",\"storage\":\"256GB PCIe® NVMe™ M.2 SSD\",\"graphics\":\"Intel Iris Xe Graphics\",\"display\":\"Màn hình chống loá, 250 nits, 45% NTSC | 15.6 inches | 1920 x 1080 pixels (FullHD)\",\"battery\":\"3-cell, 41 Wh Li-ion\",\"operating_system\":\"Windows 10 Home SL\",\"dimensions\":\"Kích thước màn hình: 15.6 inches\",\"raw\":\"Loại card đồ họa: Intel Iris Xe Graphics | Dung lượng RAM: 8GB | Loại RAM: 8GB DDR4-2666 MHz RAM (2 x 4GB) | Ổ cứng: 256GB PCIe® NVMe™ M.2 SSD | Công nghệ màn hình: Màn hình chống loá, 250 nits, 45% NTSC | Hệ điều hành khi ra mắt: Windows 10 Home SL | Loại CPU: Intel® Core™ i5-1135G7 (up to 4.2 GHz, 8 MB L3 cache, 4 nhân) | Kích thước màn hình: 15.6 inches | Độ phân giải màn hình: 1920 x 1080 pixels (FullHD) | Pin: 3-cell, 41 Wh Li-ion | Cổng giao tiếp: 1 multi-format SD media card reader: 1 SuperSpeed USB Type-C® 5Gbps signaling rate: 2 SuperSpeed USB Type-A 5Gbps signaling rate: 1 HDMI 1.4b: 1 AC smart pin: 1 headphone\\/microphone combo\"}', NULL, NULL, NULL, 1),
 ('DEB90E9E3C', 'Hộp đựng tai nghe Apple AirPods Xundd Trong Suốt', 'Âm thanh', 'Apple', 'Mua ngay hộp đựng tai nghe Apple AirPods Xundd, giá rẻ, giảm giá tới 40%, giao hàng tận nơi miễn phí. Hộp đựng chất lượng, nhiều màu sắc', 8000, 121, 42, 'hop-dung-tai-nghe-apple-airpods-xundd-trong-suot-DEB90E9E3C', 'published', 9000, 'https://cellphones.com.vn/hop-dung-tai-nghe-apple-airpods-xundd-trong-suot.html', '{\"manufacturer\":\"Xundd\",\"raw\":\"Hãng sản xuất: Xundd\"}', NULL, NULL, NULL, 0),
 ('DEE81FF983', 'Thay cáp màn hinh sony Z4', 'Màn hình', 'Sony', 'Thay cáp màn hinh sony Z4', 539000, 109, 3391, 'thay-cap-man-hinh-sony-z4-DEE81FF983', 'published', 650000, 'https://cellphones.com.vn/thay-cap-man-hinh-sony-z4.html', '[]', NULL, NULL, NULL, 0),
+('DEMO000001', 'Laptop TechStore Core i5 16GB 512GB', 'Laptop', 'TechStore', 'Sản phẩm mẫu dùng để kiểm thử quy trình mua hàng của TechStore.', 18990000, 11, 990001, 'demo000001-1', 'published', 18990000, NULL, NULL, NULL, 'QuanDev', 1, 0),
+('DEMO000002', 'Điện thoại TechStore Nova 256GB', 'Điện thoại', 'TechStore', 'Sản phẩm mẫu dùng để kiểm thử quy trình mua hàng của TechStore.', 12990000, 18, 990002, 'demo000002-2', 'published', 12990000, NULL, NULL, NULL, 'QuanDev', 2, 0),
+('DEMO000003', 'Tai nghe không dây TechStore Air', 'Phụ kiện', 'TechStore', 'Sản phẩm mẫu dùng để kiểm thử quy trình mua hàng của TechStore.', 1490000, 30, 990003, 'demo000003-3', 'published', 1490000, NULL, NULL, NULL, 'QuanDev', 1, 0),
 ('DF1B810ED7', 'Cổng chuyển đổi Tp-Link USB-C to HDMI UA520C', 'Khác', 'TP-Link', 'Mua Cổng chuyển đổi Tp-Link USB-C to HDMI UA520C chính hãng - Giá rẻ, đảm bảo chất lượng, độ bền cao, hỗ trợ giao hàng tận nơi toàn quốc.', 260000, 30, 2630, 'hub-chuyen-doi-tp-link-usb-c-to-hdmi-ua520c-DF1B810ED7', 'draft', 299000, 'https://cellphones.com.vn/hub-chuyen-doi-tp-link-usb-c-to-hdmi-ua520c.html', '{\"manufacturer\":\"Logitech\",\"raw\":\"Đầu vào: 1 x HDMI | Đầu ra: 1 x USB Type-C | Tiện ích: Hệ điều hành tương thích: Windows, MacOS, iPadOS, iOS, Andriod, Linux OS, Chrome OS: Hỗ trợ chế độ DP Alt Mode | Chất lượng nội dung: 4K@60Hz | Hãng sản xuất: Logitech\"}', NULL, NULL, NULL, 0),
 ('DF2906CF15', 'Apple Watch Series 12 42mm (GPS) Viền Nhôm Dây Cao Su Size S/M', 'Đồng hồ', 'Apple', 'Đồng hồ Apple Watch Series 12 chính hãng tại Việt Nam: giá bán, thông số, ngày mở bán. Đăng ký nhận tin mua tại CellphoneS ngay.', 10479000, 98, 1465, 'apple-watch-series-12-42mm-DF2906CF15', 'published', 11490000, 'https://cellphones.com.vn/apple-watch-series-12-42mm.html', '{\"display\":\"Màn hình Retina OLED LTPO3 luôn bật, tần số quét 1Hz: Độ sáng tối đa 2000 nit, tối thiểu 1 nit\",\"battery\":\"Thời lượng pin lên đến 24 giờ: Chế độ nguồn điện thấp lên đến 38 giờ: Tập luyện ngoài trời lên đến 10 giờ\",\"manufacturer\":\"Apple Chính hãng\",\"raw\":\"Công nghệ màn hình: Màn hình Retina OLED LTPO3 luôn bật, tần số quét 1Hz: Độ sáng tối đa 2000 nit, tối thiểu 1 nit | Đường kính mặt: 42 mm | Nghe,gọi: Nghe gọi qua Bluetooth | Tiện ích sức khoẻ: Chế độ luyện tập, Theo dõi giấc ngủ, Đo nhịp tim, Đo lượng oxy trong máu, Đếm bước chân, Tính calo tiêu thụ, Tính quãng đường chạy, Đo mức độ stress, Cảm biến nhiệt độ, Phát hiện té ngã, Cảnh báo nhịp tim bất thường, Đo điện tâm đồ, Đo VO2 max (Đo lượng tiêu thụ oxy tối đa), Theo dõi chu kỳ, Tình trạng HRV (Heart Rate Variability), Bài tập thở, Nhắc nhở ít vận động, Thiền, Bài tập thư giãn, Phát hiện chứng ngưng thở khi ngủ, Theo dõi chỉ số AGEs | GPS tích hợp: GPS tích hợp sẵn trên đồng hồ | Tương thích: iPhone 11 trở lên, bao gồm iPhone SE (thế hệ thứ 2 trở lên), sử dụng iOS 27 trở lên | Thời lượng pin: Thời lượng pin lên đến 24 giờ: Chế độ nguồn điện thấp lên đến 38 giờ: Tập luyện ngoài trời lên đến 10 giờ | Hãng sản xuất: Apple Chính hãng\"}', NULL, NULL, NULL, 0),
 ('DF3E379BB4', 'Máy ép cam Bosch MCP72GPB', 'Điện gia dụng', 'Bosch', 'Mua Máy ép cam Bosch MCP72GPB chính hãng - Giá rẻ, đảm bảo chất lượng, độ bền cao, hỗ trợ giao hàng tận nơi toàn quốc.', 1531000, 107, 746, 'may-ep-cam-bosch-mcp72gpb-DF3E379BB4', 'published', 1800000, 'https://cellphones.com.vn/may-ep-cam-bosch-mcp72gpb.html', '{\"manufacturer\":\"Bosch\",\"raw\":\"Dòng điện vào: 220 - 240V ~ 50\\/60Hz | Công suất: 40W | Dung tích: 1 Lít | Chất liệu cối xay: Thủy tinh | Tốc độ: 1 tốc độ: Xoay đảo chiều | Chất liệu lưới lọc: Thép không gỉ | Bảng điều khiển: Nút nhấn cơ | Chế độ an toàn: Lắp đúng khớp mới hoạt động, Tự ngắt khi quá nhiệt | Chiều dài dây điện: 100 cm | Chất liệu: Thân máy: Nhựa kết hợp thép không gỉ | Tiện ích: Chân đế chống trượt | Hãng sản xuất: Bosch\"}', NULL, NULL, NULL, 0),
@@ -11373,7 +11758,10 @@ INSERT INTO `san_pham_hinh_anh` (`id_hinh_anh`, `ma_sp`, `duong_dan_anh`, `alt_t
 (10316, 'FFF50EADDC', 'catalog/FFF50EADDC/image_05.png', 'Cặp đa năng Sakos Flash 11 15.6 inch', 4, '2026-10-22 07:33:18', '2026-10-22 07:33:18'),
 (10317, 'FFF50EADDC', 'catalog/FFF50EADDC/image_06.png', 'Cặp đa năng Sakos Flash 11 15.6 inch', 5, '2026-10-22 07:33:18', '2026-10-22 07:33:18'),
 (10318, 'FFF50EADDC', 'catalog/FFF50EADDC/image_07.png', 'Cặp đa năng Sakos Flash 11 15.6 inch', 6, '2026-10-22 07:33:18', '2026-10-22 07:33:18'),
-(10319, 'FFF50EADDC', 'catalog/FFF50EADDC/image_08.png', 'Cặp đa năng Sakos Flash 11 15.6 inch', 7, '2026-10-22 07:33:18', '2026-10-22 07:33:18');
+(10319, 'FFF50EADDC', 'catalog/FFF50EADDC/image_08.png', 'Cặp đa năng Sakos Flash 11 15.6 inch', 7, '2026-10-22 07:33:18', '2026-10-22 07:33:18'),
+(10320, 'DEMO000001', '/images/demo/product-placeholder.svg', 'Laptop TechStore Core i5 16GB 512GB', 1, '2026-10-23 20:04:47', '2026-10-23 20:04:47'),
+(10321, 'DEMO000002', '/images/demo/product-placeholder.svg', 'Điện thoại TechStore Nova 256GB', 1, '2026-10-23 20:04:47', '2026-10-23 20:04:47'),
+(10322, 'DEMO000003', '/images/demo/product-placeholder.svg', 'Tai nghe không dây TechStore Air', 1, '2026-10-23 20:04:47', '2026-10-23 20:04:47');
 
 -- --------------------------------------------------------
 
@@ -11386,6 +11774,13 @@ CREATE TABLE `san_pham_khuyen_mai` (
   `ma_sp` char(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Đang đổ dữ liệu cho bảng `san_pham_khuyen_mai`
+--
+
+INSERT INTO `san_pham_khuyen_mai` (`id_khuyen_mai`, `ma_sp`) VALUES
+(990001, 'DEMO000002');
+
 -- --------------------------------------------------------
 
 --
@@ -11397,6 +11792,13 @@ CREATE TABLE `san_pham_yeu_thich` (
   `ma_sp` char(10) NOT NULL,
   `thoi_gian_tao` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `san_pham_yeu_thich`
+--
+
+INSERT INTO `san_pham_yeu_thich` (`ma_kh`, `ma_sp`, `thoi_gian_tao`) VALUES
+('KHDEMO000001', 'DEMO000003', '2026-10-23 20:04:48');
 
 -- --------------------------------------------------------
 
@@ -11439,6 +11841,13 @@ CREATE TABLE `so_serial_san_pham` (
   `id_cua_hang` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Đang đổ dữ liệu cho bảng `so_serial_san_pham`
+--
+
+INSERT INTO `so_serial_san_pham` (`id_serial`, `ma_sp`, `so_serial`, `trang_thai`, `ngay_nhap`, `ma_dh`, `id_phieu_nhap`, `id_cua_hang`) VALUES
+(1, 'DEMO000001', 'DEMO-SERIAL-0001', 'Sold', '2026-10-13 20:04:48', 'DHDEMO0001', 'PNDEMO0001', 1);
+
 -- --------------------------------------------------------
 
 --
@@ -11453,6 +11862,42 @@ CREATE TABLE `thanh_toan` (
   `trang_thai` enum('Chua Thanh Toan','Da Thanh Toan') DEFAULT 'Chua Thanh Toan'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Đang đổ dữ liệu cho bảng `thanh_toan`
+--
+
+INSERT INTO `thanh_toan` (`ma_tt`, `ma_dh`, `phuong_thuc`, `ngay_va_gio`, `trang_thai`) VALUES
+('B5LCY3SI5U', 'KQHFA8GBQ4', 'Tien mat', '2026-10-23 09:59:47', 'Chua Thanh Toan'),
+('TTDEMO0001', 'DHDEMO0001', 'Tien mat', '2026-10-23 03:04:48', 'Da Thanh Toan'),
+('TTDEMO0002', 'DHDEMO0002', 'Chuyen khoan', '2026-10-22 03:04:48', 'Da Thanh Toan');
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `thong_bao_nguoi_dung`
+--
+
+CREATE TABLE `thong_bao_nguoi_dung` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `ma_kh` varchar(20) NOT NULL,
+  `loai` varchar(40) NOT NULL,
+  `tieu_de` varchar(200) NOT NULL,
+  `noi_dung` text NOT NULL,
+  `ma_dh` varchar(30) DEFAULT NULL,
+  `read_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `thong_bao_nguoi_dung`
+--
+
+INSERT INTO `thong_bao_nguoi_dung` (`id`, `ma_kh`, `loai`, `tieu_de`, `noi_dung`, `ma_dh`, `read_at`, `created_at`) VALUES
+(1, 'KHYVNNDQNV4Z1H', 'order.created', 'Đặt hàng thành công', 'Đơn hàng KQHFA8GBQ4 đã được tạo và đang chờ cửa hàng xác nhận.', 'KQHFA8GBQ4', '2026-10-23 07:18:25', '2026-10-23 02:59:47'),
+(2, 'KHYVNNDQNV4Z1H', 'order.cancelled', 'Đơn hàng đã được hủy', 'Đơn hàng KQHFA8GBQ4 đã được hủy.', 'KQHFA8GBQ4', NULL, '2026-10-23 07:20:07'),
+(3, 'KHDEMO000001', 'order_status', 'Cập nhật đơn hàng mẫu', 'Đơn hàng DHDEMO0001 hiện ở trạng thái Da Giao.', 'DHDEMO0001', NULL, '2026-10-23 20:04:48'),
+(4, 'KHDEMO000002', 'order_status', 'Cập nhật đơn hàng mẫu', 'Đơn hàng DHDEMO0002 hiện ở trạng thái Dang Giao.', 'DHDEMO0002', NULL, '2026-10-23 20:04:48');
+
 -- --------------------------------------------------------
 
 --
@@ -11464,6 +11909,15 @@ CREATE TABLE `ton_kho_cua_hang` (
   `ma_sp` char(10) NOT NULL,
   `so_luong_ton` int(11) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `ton_kho_cua_hang`
+--
+
+INSERT INTO `ton_kho_cua_hang` (`id_cua_hang`, `ma_sp`, `so_luong_ton`) VALUES
+(1, 'DEMO000001', 11),
+(1, 'DEMO000003', 30),
+(2, 'DEMO000002', 18);
 
 -- --------------------------------------------------------
 
@@ -11481,6 +11935,90 @@ CREATE TABLE `users` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `uu_dai_hoc_tap`
+--
+
+CREATE TABLE `uu_dai_hoc_tap` (
+  `ma_kh` varchar(20) NOT NULL,
+  `email_truong` varchar(255) NOT NULL,
+  `doi_tuong` varchar(40) NOT NULL,
+  `verified_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `trang_thai` varchar(20) NOT NULL DEFAULT 'pending',
+  `minh_chung_path` varchar(255) DEFAULT NULL,
+  `ghi_chu_duyet` text DEFAULT NULL,
+  `nguoi_duyet` varchar(20) DEFAULT NULL,
+  `duyet_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `voucher_da_thu_thap`
+--
+
+CREATE TABLE `voucher_da_thu_thap` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `ma_kh` varchar(20) NOT NULL,
+  `code` varchar(40) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `voucher_da_thu_thap`
+--
+
+INSERT INTO `voucher_da_thu_thap` (`id`, `ma_kh`, `code`, `created_at`) VALUES
+(1, 'KHDEMO000002', 'WELCOME10', '2026-10-23 20:04:48');
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `xac_minh_hoc_tap`
+--
+
+CREATE TABLE `xac_minh_hoc_tap` (
+  `ma_kh` varchar(20) NOT NULL,
+  `email_truong` varchar(255) NOT NULL,
+  `doi_tuong` varchar(40) NOT NULL,
+  `ma_otp_hash` varchar(255) NOT NULL,
+  `so_lan_thu` tinyint(3) UNSIGNED NOT NULL DEFAULT 0,
+  `expires_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `yeu_cau_doi_tra`
+--
+
+CREATE TABLE `yeu_cau_doi_tra` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `ma_dh` varchar(30) NOT NULL,
+  `ma_kh` varchar(20) NOT NULL,
+  `loai_yeu_cau` varchar(20) NOT NULL,
+  `ly_do` varchar(100) NOT NULL,
+  `mo_ta` text DEFAULT NULL,
+  `trang_thai` varchar(30) NOT NULL DEFAULT 'Cho xu ly',
+  `ghi_chu_nhan_vien` text DEFAULT NULL,
+  `nguoi_xu_ly` varchar(60) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `yeu_cau_doi_tra`
+--
+
+INSERT INTO `yeu_cau_doi_tra` (`id`, `ma_dh`, `ma_kh`, `loai_yeu_cau`, `ly_do`, `mo_ta`, `trang_thai`, `ghi_chu_nhan_vien`, `nguoi_xu_ly`, `created_at`, `updated_at`) VALUES
+(1, 'DHDEMO0001', 'KHDEMO000001', 'return', 'changed_mind', 'Yêu cầu mẫu để kiểm thử quy trình đổi trả.', 'Cho xu ly', NULL, NULL, '2026-10-23 20:04:48', '2026-10-23 20:04:48');
 
 --
 -- Chỉ mục cho các bảng đã đổ
@@ -11541,7 +12079,8 @@ ALTER TABLE `cache_locks`
 --
 ALTER TABLE `chatbot_conversations`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `chatbot_conversations_status_index` (`status`);
+  ADD KEY `chatbot_conversations_status_index` (`status`),
+  ADD KEY `chatbot_conversations_assigned_admin_id_index` (`assigned_admin_id`);
 
 --
 -- Chỉ mục cho bảng `chatbot_hoi_thoai`
@@ -11646,7 +12185,8 @@ ALTER TABLE `don_hang`
   ADD UNIQUE KEY `don_hang_idempotency_key_unique` (`idempotency_key`),
   ADD KEY `fk_order_user` (`ma_kh`),
   ADD KEY `don_hang_id_cua_hang_index` (`id_cua_hang`),
-  ADD KEY `don_hang_nhan_vien_id_index` (`nhan_vien_id`);
+  ADD KEY `don_hang_nhan_vien_id_index` (`nhan_vien_id`),
+  ADD KEY `don_hang_ma_van_don_index` (`ma_van_don`);
 
 --
 -- Chỉ mục cho bảng `failed_jobs`
@@ -11732,6 +12272,15 @@ ALTER TABLE `nguoi_dung`
 ALTER TABLE `nhat_ky_hoat_dong`
   ADD PRIMARY KEY (`id_nhat_ky`),
   ADD KEY `fk_audit_admin` (`tk_admin`);
+
+--
+-- Chỉ mục cho bảng `nhat_ky_ton_kho`
+--
+ALTER TABLE `nhat_ky_ton_kho`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `nhat_ky_ton_kho_id_cua_hang_created_at_index` (`id_cua_hang`,`created_at`),
+  ADD KEY `nhat_ky_ton_kho_ma_sp_index` (`ma_sp`),
+  ADD KEY `nhat_ky_ton_kho_id_cua_hang_index` (`id_cua_hang`);
 
 --
 -- Chỉ mục cho bảng `nhat_ky_trang_thai_don`
@@ -11851,6 +12400,15 @@ ALTER TABLE `thanh_toan`
   ADD KEY `fk_payment_order` (`ma_dh`);
 
 --
+-- Chỉ mục cho bảng `thong_bao_nguoi_dung`
+--
+ALTER TABLE `thong_bao_nguoi_dung`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `thong_bao_nguoi_dung_ma_kh_read_at_created_at_index` (`ma_kh`,`read_at`,`created_at`),
+  ADD KEY `thong_bao_nguoi_dung_ma_kh_index` (`ma_kh`),
+  ADD KEY `thong_bao_nguoi_dung_ma_dh_index` (`ma_dh`);
+
+--
 -- Chỉ mục cho bảng `ton_kho_cua_hang`
 --
 ALTER TABLE `ton_kho_cua_hang`
@@ -11865,6 +12423,35 @@ ALTER TABLE `users`
   ADD UNIQUE KEY `users_email_unique` (`email`);
 
 --
+-- Chỉ mục cho bảng `uu_dai_hoc_tap`
+--
+ALTER TABLE `uu_dai_hoc_tap`
+  ADD PRIMARY KEY (`ma_kh`);
+
+--
+-- Chỉ mục cho bảng `voucher_da_thu_thap`
+--
+ALTER TABLE `voucher_da_thu_thap`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `voucher_da_thu_thap_ma_kh_code_unique` (`ma_kh`,`code`),
+  ADD KEY `voucher_da_thu_thap_code_ma_kh_index` (`code`,`ma_kh`);
+
+--
+-- Chỉ mục cho bảng `xac_minh_hoc_tap`
+--
+ALTER TABLE `xac_minh_hoc_tap`
+  ADD PRIMARY KEY (`ma_kh`);
+
+--
+-- Chỉ mục cho bảng `yeu_cau_doi_tra`
+--
+ALTER TABLE `yeu_cau_doi_tra`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `yeu_cau_doi_tra_ma_dh_unique` (`ma_dh`),
+  ADD KEY `yeu_cau_doi_tra_ma_kh_created_at_index` (`ma_kh`,`created_at`),
+  ADD KEY `yeu_cau_doi_tra_ma_kh_index` (`ma_kh`);
+
+--
 -- AUTO_INCREMENT cho các bảng đã đổ
 --
 
@@ -11872,25 +12459,25 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT cho bảng `api_access_tokens`
 --
 ALTER TABLE `api_access_tokens`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT cho bảng `bai_viet`
 --
 ALTER TABLE `bai_viet`
-  MODIFY `id_bai_viet` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_bai_viet` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT cho bảng `bang_luong`
 --
 ALTER TABLE `bang_luong`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT cho bảng `banner`
 --
 ALTER TABLE `banner`
-  MODIFY `id_banner` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_banner` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT cho bảng `chatbot_hoi_thoai`
@@ -11902,13 +12489,13 @@ ALTER TABLE `chatbot_hoi_thoai`
 -- AUTO_INCREMENT cho bảng `chatbot_huan_luyen`
 --
 ALTER TABLE `chatbot_huan_luyen`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=120;
 
 --
 -- AUTO_INCREMENT cho bảng `chatbot_messages`
 --
 ALTER TABLE `chatbot_messages`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT cho bảng `chatbot_tin_nhan`
@@ -11920,19 +12507,19 @@ ALTER TABLE `chatbot_tin_nhan`
 -- AUTO_INCREMENT cho bảng `cua_hang`
 --
 ALTER TABLE `cua_hang`
-  MODIFY `id_cua_hang` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_cua_hang` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT cho bảng `danh_gia`
 --
 ALTER TABLE `danh_gia`
-  MODIFY `id_danh_gia` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_danh_gia` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT cho bảng `danh_gia_mau`
 --
 ALTER TABLE `danh_gia_mau`
-  MODIFY `id_danh_gia_mau` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id_danh_gia_mau` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT cho bảng `failed_jobs`
@@ -11944,67 +12531,91 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT cho bảng `jobs`
 --
 ALTER TABLE `jobs`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT cho bảng `khuyen_mai`
 --
 ALTER TABLE `khuyen_mai`
-  MODIFY `id_khuyen_mai` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_khuyen_mai` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=990002;
 
 --
 -- AUTO_INCREMENT cho bảng `lich_su_su_dung_voucher`
 --
 ALTER TABLE `lich_su_su_dung_voucher`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT cho bảng `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT cho bảng `nhat_ky_hoat_dong`
 --
 ALTER TABLE `nhat_ky_hoat_dong`
-  MODIFY `id_nhat_ky` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_nhat_ky` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT cho bảng `nhat_ky_ton_kho`
+--
+ALTER TABLE `nhat_ky_ton_kho`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT cho bảng `nhat_ky_trang_thai_don`
 --
 ALTER TABLE `nhat_ky_trang_thai_don`
-  MODIFY `id_nhat_ky` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_nhat_ky` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT cho bảng `nha_cung_cap`
 --
 ALTER TABLE `nha_cung_cap`
-  MODIFY `id_nha_cung_cap` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_nha_cung_cap` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT cho bảng `phieu_giam_gia`
 --
 ALTER TABLE `phieu_giam_gia`
-  MODIFY `id_voucher` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_voucher` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT cho bảng `san_pham_hinh_anh`
 --
 ALTER TABLE `san_pham_hinh_anh`
-  MODIFY `id_hinh_anh` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10320;
+  MODIFY `id_hinh_anh` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10323;
 
 --
 -- AUTO_INCREMENT cho bảng `so_serial_san_pham`
 --
 ALTER TABLE `so_serial_san_pham`
-  MODIFY `id_serial` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_serial` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT cho bảng `thong_bao_nguoi_dung`
+--
+ALTER TABLE `thong_bao_nguoi_dung`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT cho bảng `users`
 --
 ALTER TABLE `users`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT cho bảng `voucher_da_thu_thap`
+--
+ALTER TABLE `voucher_da_thu_thap`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT cho bảng `yeu_cau_doi_tra`
+--
+ALTER TABLE `yeu_cau_doi_tra`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- Các ràng buộc cho các bảng đã đổ

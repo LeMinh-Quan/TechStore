@@ -289,6 +289,8 @@ TechStore/
 
 Các tệp CSS trong `web/src` định nghĩa giao diện và bố cục.
 
+`web/design/TechStore-Store-Flow.html` là nguồn mockup cho bộ thiết kế 16 màn hình; bản PDF và ảnh PNG nằm trong `web/design/exports`.
+
 ### Thư mục `chatbot`
 
 `chatbot/src/server.js` khởi tạo Express và các endpoint chat.
@@ -1275,7 +1277,19 @@ Set-Location D:\TechStore\api
 php artisan db:seed --class=Database\Seeders\ChatbotKnowledgeSeeder
 ```
 
-Kiểm tra seed class tồn tại trong phiên bản mã nguồn đang dùng.
+Seeder bổ sung các câu hỏi còn thiếu một cách lặp lại an toàn, giữ nguyên dữ liệu đã có và cung cấp 116 ví dụ thuộc sáu ý định chatbot đang được ứng dụng hỗ trợ.
+
+### Dữ liệu mẫu cửa hàng
+
+Nạp dữ liệu mẫu cho chi nhánh, tài khoản quản trị, sản phẩm, khách hàng và đơn hàng bằng lệnh:
+
+```powershell
+Set-Location D:\TechStore\api
+php artisan migrate
+php artisan db:seed
+```
+
+Seeder không tạo dữ liệu cho bảng `users`, các bảng chatbot hoặc các bảng hạ tầng Laravel. Mỗi lần chạy tạo mật khẩu ngẫu nhiên tạm thời dùng chung cho tài khoản demo và in mật khẩu vào kết quả lệnh; chỉ dùng tài khoản này trong môi trường phát triển.
 
 ### Chuyển tiếp tới nhân viên
 
@@ -1710,6 +1724,7 @@ Chỉ xuất bản sản phẩm đã được kiểm tra thông tin.
 | `php artisan catalog:sync-prices` | Xem trước hoặc đồng bộ giá |
 | `php artisan catalog:publish-priced` | Xem trước hoặc xuất bản catalog |
 | `php artisan db:seed --class=Database\Seeders\ChatbotKnowledgeSeeder` | Nạp FAQ mẫu |
+| `php artisan db:seed` | Nạp dữ liệu mẫu cửa hàng |
 
 Chạy lệnh Artisan trong thư mục `api`.
 
@@ -2126,5 +2141,8 @@ Cập nhật tài liệu này khi thay đổi lệnh, route hoặc giới hạn 
 - [Migrations](./api/database/migrations)
 - [Kiểm thử Laravel](./api/tests/Feature)
 - [Mã nguồn giao diện](./web/src)
+- [Bản thiết kế giao diện (PDF, 16 màn hình)](./web/design/exports/TechStore-Store-Flow.pdf)
+- [Ảnh PNG từng màn hình](./web/design/exports)
+- [Nguồn mockup HTML](./web/design/TechStore-Store-Flow.html)
 - [Máy chủ chatbot](./chatbot/src/server.js)
 - [Schema lịch sử](./database/techstore.sql)

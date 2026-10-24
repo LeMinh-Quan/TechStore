@@ -40,11 +40,16 @@ class ChatbotConversationApiTest extends TestCase
     {
         $this->artisan('db:seed', ['--class' => ChatbotKnowledgeSeeder::class])
             ->assertSuccessful();
-        $this->assertSame(30, DB::table('chatbot_huan_luyen')->count());
+        $this->assertSame(116, DB::table('chatbot_huan_luyen')->count());
+        $this->assertDatabaseHas('chatbot_huan_luyen', [
+            'y_dinh' => 'payment',
+            'cau_hoi' => 'Có thanh toán bằng QR không?',
+            'trang_thai' => 1,
+        ]);
 
         $this->artisan('db:seed', ['--class' => ChatbotKnowledgeSeeder::class])
             ->assertSuccessful();
-        $this->assertSame(30, DB::table('chatbot_huan_luyen')->count());
+        $this->assertSame(116, DB::table('chatbot_huan_luyen')->count());
     }
 
     public function test_admin_can_manage_training_examples_and_chatbot_matches_similar_questions(): void

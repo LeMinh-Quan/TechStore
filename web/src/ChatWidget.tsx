@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 import type { FormEvent } from 'react'
+import { translate } from './language'
+import type { Language } from './language'
 
 type ChatProduct = { id: string; name: string; price: number }
 type Message = { id: string; role: 'assistant' | 'user' | 'admin'; text: string; products?: ChatProduct[] }
@@ -76,7 +78,8 @@ function presentConversation(
   ]
 }
 
-export function ChatWidget() {
+export function ChatWidget({ language = 'vi' }: { language?: Language }) {
+  const t = (text: string) => translate(language, text)
   const [open, setOpen] = useState(false)
   const [input, setInput] = useState('')
   const [conversationSession, setConversationSession] = useState(loadConversationSession)
@@ -194,37 +197,37 @@ export function ChatWidget() {
   return (
     <div className="chat-widget">
       {open && (
-        <section className="chat-panel" aria-label="Trò chuyện với TechStore">
+        <section className="chat-panel" aria-label={language === 'vi' ? 'Trò chuyện với TechStore' : 'Chat with TechStore'}>
           <header className="chat-header">
             <div className="chat-avatar"><img src="/techstore-mark.svg" alt="" /></div>
             <div>
-              <strong>Trợ lý TechStore</strong>
-              <span><i />{conversationStatus === 'waiting_admin' ? 'Đang chờ nhân viên hỗ trợ' : conversationStatus === 'closed' ? 'Cuộc trò chuyện đã kết thúc' : 'Đang trực tuyến'}</span>
+              <strong>{t('Trợ lý TechStore')}</strong>
+              <span><i />{conversationStatus === 'waiting_admin' ? t('Đang chờ nhân viên hỗ trợ') : conversationStatus === 'closed' ? t('Cuộc trò chuyện đã kết thúc') : t('Đang trực tuyến')}</span>
             </div>
-            <button className="chat-close" onClick={() => setOpen(false)} aria-label="Đóng trò chuyện">×</button>
+            <button className="chat-close" onClick={() => setOpen(false)} aria-label={t('Đóng trò chuyện')}>×</button>
           </header>
           <div className="chat-messages" aria-live="polite">
             {connectionNotice && <p className="chat-connection-notice" role="status">{connectionNotice}</p>}
             {messages.map((message) => (
               <div className={`chat-entry ${message.role}`} key={message.id}>
-                <p className={`chat-message ${message.role}`}>{message.text}</p>
+                <p className={`chat-message ${message.role}`}>{message.id === 'welcome' ? t(message.text) : message.text}</p>
                 {message.products?.map((product) => (
                   <article className="chat-product" key={product.id}>
                     <strong>{product.name}</strong>
-                    <span>{new Intl.NumberFormat('vi-VN').format(product.price)} ₫</span>
+                    <span>{new Intl.NumberFormat(language === 'vi' ? 'vi-VN' : 'en-US').format(product.price)} ₫</span>
                     <button
                       type="button"
-                      aria-label={`Xem chi tiết ${product.name}`}
+                      aria-label={`${t('Xem chi tiết')} ${product.name}`}
                       onClick={() => window.dispatchEvent(new CustomEvent('techstore:open-product', { detail: { slug: product.id } }))}
                     >
-                      Xem chi tiết
+                      {t('Xem chi tiết')}
                     </button>
                   </article>
                 ))}
               </div>
             ))}
             {messages.length === 1 && conversationStatus === 'bot' && (
-              <div className="chat-suggestions" aria-label="Chủ đề hỗ trợ nhanh">
+              <div className="chat-suggestions" aria-label={language === 'vi' ? 'Chủ đề hỗ trợ nhanh' : 'Quick help topics'}>
                 {quickQuestions.map((question) => (
                   <button
                     key={question.message}
@@ -232,28 +235,28 @@ export function ChatWidget() {
                     disabled={sending}
                     onClick={() => void submitMessage(question.message)}
                   >
-                    {question.label}
+                    {t(question.label)}
                   </button>
                 ))}
               </div>
             )}
-            {sending && <p className="chat-message assistant typing">Đang xử lý tin nhắn…</p>}
+            {sending && <p className="chat-message assistant typing">{t('Đang xử lý tin nhắn…')}</p>}
           </div>
           <form className="chat-form" onSubmit={sendMessage}>
             <input
-              aria-label="Tin nhắn"
+              aria-label={language === 'vi' ? 'Tin nhắn' : 'Message'}
               maxLength={500}
-              placeholder={conversationStatus === 'waiting_admin' ? 'Gửi thêm thông tin cho nhân viên…' : 'Nhập câu hỏi của bạn…'}
+              placeholder={conversationStatus === 'waiting_admin' ? language === 'vi' ? 'Gửi thêm thông tin cho nhân viên…' : 'Send more information to the agent…' : language === 'vi' ? 'Nhập câu hỏi của bạn…' : 'Type your question…'}
               value={input}
               onChange={(event) => setInput(event.target.value)}
               disabled={sending}
             />
-            <button aria-label="Gửi tin nhắn" disabled={sending || !input.trim()}>↗</button>
+            <button aria-label={t('Gửi tin nhắn')} disabled={sending || !input.trim()}>↗</button>
           </form>
         </section>
       )}
       <button className="chat-launcher" aria-expanded={open} onClick={() => setOpen((value) => !value)}>
-        <span aria-hidden="true">{open ? '×' : '✳'}</span>{open ? 'Đóng' : 'Tư vấn'}
+        <span aria-hidden="true">{open ? '×' : '✳'}</span>{open ? t('Đóng') : t('Tư vấn')}
       </button>
     </div>
   )

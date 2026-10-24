@@ -7,6 +7,8 @@ import { apiRequest } from './commerce'
 import type { CartData, CartItem, Customer } from './commerce'
 import { ProductPhoto } from './ProductPhoto'
 import { useDialogAccessibility } from './useDialogAccessibility'
+import { languageStorageKey, loadLanguage, translate, translateCategory } from './language'
+import type { Language } from './language'
 
 const CommerceDialogs = lazy(() => import('./CommerceDialogs').then(({ CommerceDialogs }) => ({ default: CommerceDialogs })))
 const ProductComparisonDialog = lazy(() => import('./ProductComparisonDialog').then(({ ProductComparisonDialog }) => ({ default: ProductComparisonDialog })))
@@ -204,6 +206,10 @@ function describeError(reason: unknown, fallback: string): string {
 
 function App() {
   useDialogAccessibility()
+  const [language, setLanguage] = useState<Language>(loadLanguage)
+  const [languageMenuOpen, setLanguageMenuOpen] = useState(false)
+  const languageMenuRef = useRef<HTMLDivElement>(null)
+  const t = (text: string) => translate(language, text)
   const initialCatalog = readCatalogUrl()
   const [initialCategory] = useState(initialCatalog.category)
   const [categories, setCategories] = useState<string[]>([])
@@ -294,6 +300,7 @@ function App() {
   const detailError = detail?.slug === selectedSlug ? detail.error : ''
   const featuredCategories = categories.slice(0, 6)
   const activeSlide = heroSlides[heroSlide]
+  const numberLocale = language === 'vi' ? 'vi-VN' : 'en-US'
   const relatedProducts = detailProduct
     ? Object.values(catalogs).flatMap((catalog) => catalog.products)
       .filter((product, index, products) => product.id !== detailProduct.id
@@ -301,6 +308,29 @@ function App() {
         && products.findIndex((candidate) => candidate.id === product.id) === index)
       .slice(0, 4)
     : []
+
+  useEffect(() => {
+    localStorage.setItem(languageStorageKey, language)
+    document.documentElement.lang = language
+  }, [language])
+
+  useEffect(() => {
+    if (!languageMenuOpen) return
+    const closeOnOutsideClick = (event: PointerEvent) => {
+      if (event.target instanceof Node && !languageMenuRef.current?.contains(event.target)) {
+        setLanguageMenuOpen(false)
+      }
+    }
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setLanguageMenuOpen(false)
+    }
+    document.addEventListener('pointerdown', closeOnOutsideClick)
+    document.addEventListener('keydown', closeOnEscape)
+    return () => {
+      document.removeEventListener('pointerdown', closeOnOutsideClick)
+      document.removeEventListener('keydown', closeOnEscape)
+    }
+  }, [languageMenuOpen])
 
   function syncCatalogUrl(state: CatalogUrlState, replace = false) {
     const params = new URLSearchParams(window.location.search)
@@ -975,47 +1005,47 @@ function App() {
     return (
       <div className="product-grid">
         {items.map((product, index) => {
-          const productName = product.name?.trim() || 'Sản phẩm đang cập nhật'
+          const productName = product.name?.trim() || t('Sản phẩm đang cập nhật')
           const productSlug = product.slug || product.id
           return (
             <article className="product-card" key={product.id || `${productName}-${index}`}>
-              <a className={`product-image image-tone-${index % 4}`} href={`?product=${encodeURIComponent(productSlug ?? '')}`} onClick={(event) => openProduct(event, productSlug ?? '')} aria-label={`Xem ${productName}`}>
+              <a className={`product-image image-tone-${index % 4}`} href={`?product=${encodeURIComponent(productSlug ?? '')}`} onClick={(event) => openProduct(event, productSlug ?? '')} aria-label={`${language === 'vi' ? 'Xem' : 'View'} ${productName}`}>
                 {productPhoto({ ...product, name: productName }, undefined, index < 2 ? 'eager' : 'lazy')}
-                <span className="image-arrow" aria-hidden="true">Xem chi tiết <b>↗</b></span>
+                <span className="image-arrow" aria-hidden="true">{t('Xem chi tiết')} <b>↗</b></span>
                 {product.price > 0 && product.list_price !== null && product.list_price > product.price && (
-                  <span className="discount-badge" aria-label={`Ưu đãi, giảm ${Math.round((1 - product.price / product.list_price) * 100)} phần trăm`}>
-                    Ưu đãi · Giảm {Math.round((1 - product.price / product.list_price) * 100)}%
+                  <span className="discount-badge" aria-label={language === 'vi' ? `Ưu đãi, giảm ${Math.round((1 - product.price / product.list_price) * 100)} phần trăm` : `Offer, ${Math.round((1 - product.price / product.list_price) * 100)}% off`}>
+                    {language === 'vi' ? 'Ưu đãi · Giảm' : 'Offer ·'} {Math.round((1 - product.price / product.list_price) * 100)}%
                   </span>
                 )}
               </a>
-              <div className="product-meta"><span>{product.category ?? 'Sản phẩm'}</span><span>{product.brand}</span></div>
-              <h3><a aria-label={`Xem chi tiết ${productName}`} href={`?product=${encodeURIComponent(productSlug ?? '')}`} onClick={(event) => openProduct(event, productSlug ?? '')}>{productName}</a></h3>
-              <div className="product-trust" aria-label="Thông tin đánh giá và bảo hành">
+              <div className="product-meta"><span>{product.category ? translateCategory(language, product.category) : t('Sản phẩm')}</span><span>{product.brand}</span></div>
+              <h3><a aria-label={`${t('Xem chi tiết')} ${productName}`} href={`?product=${encodeURIComponent(productSlug ?? '')}`} onClick={(event) => openProduct(event, productSlug ?? '')}>{productName}</a></h3>
+              <div className="product-trust" aria-label={t('Thông tin đánh giá và bảo hành')}>
                 {product.review_count
-                  ? <span className="product-rating" aria-label={`Đánh giá ${product.average_rating?.toFixed(1)} trên 5 từ ${product.review_count} khách hàng`}>★ {product.average_rating?.toFixed(1)} · {product.review_count} đánh giá</span>
-                  : <span>Chưa có đánh giá</span>}
-                {product.sold_count ? <span>{product.sold_count} đã bán</span> : null}
-                <span>Bảo hành tra cứu theo serial</span>
+                  ? <span className="product-rating" aria-label={language === 'vi' ? `Đánh giá ${product.average_rating?.toFixed(1)} trên 5 từ ${product.review_count} khách hàng` : `${product.average_rating?.toFixed(1)} out of 5 from ${product.review_count} reviews`}>★ {product.average_rating?.toFixed(1)} · {product.review_count} {language === 'vi' ? 'đánh giá' : 'reviews'}</span>
+                  : <span>{t('Chưa có đánh giá')}</span>}
+                {product.sold_count ? <span>{product.sold_count} {language === 'vi' ? 'đã bán' : 'sold'}</span> : null}
+                <span>{t('Bảo hành tra cứu theo serial')}</span>
               </div>
               <div className="product-footer">
                 <div className="product-price-block">
-                  <strong className="current-price">{product.price > 0 ? `${new Intl.NumberFormat('vi-VN').format(product.price)} ₫` : 'Đang cập nhật giá'}</strong>
+                  <strong className="current-price">{product.price > 0 ? `${new Intl.NumberFormat(numberLocale).format(product.price)} ₫` : t('Đang cập nhật giá')}</strong>
                   {product.price > 0 && product.list_price !== null && product.list_price > product.price && (
                     <>
-                      <del>{new Intl.NumberFormat('vi-VN').format(product.list_price)} ₫</del>
-                      <span className="product-savings">Tiết kiệm {new Intl.NumberFormat('vi-VN').format(product.list_price - product.price)} ₫</span>
+                      <del>{new Intl.NumberFormat(numberLocale).format(product.list_price)} ₫</del>
+                      <span className="product-savings">{t('Tiết kiệm')} {new Intl.NumberFormat(numberLocale).format(product.list_price - product.price)} ₫</span>
                     </>
                   )}
                 </div>
-                <span className="stock-status"><i className={product.purchasable ? 'stock-available' : 'stock-unavailable'} />{product.purchasable ? `Còn ${product.stock} sản phẩm` : product.stock <= 0 ? 'Hết hàng' : 'Chưa mở bán'}</span>
+                <span className="stock-status"><i className={product.purchasable ? 'stock-available' : 'stock-unavailable'} />{product.purchasable ? `${language === 'vi' ? 'Còn' : 'In stock:'} ${product.stock} ${t('sản phẩm')}` : product.stock <= 0 ? t('Hết hàng') : t('Chưa mở bán')}</span>
               </div>
-              <button className="add-cart-button" type="button" onClick={() => void addToCart(product.id, product)} disabled={!product.purchasable}>{product.purchasable ? 'Thêm vào giỏ' : 'Chưa thể mua'}</button>
+              <button className="add-cart-button" type="button" onClick={() => void addToCart(product.id, product)} disabled={!product.purchasable}>{product.purchasable ? t('Thêm vào giỏ') : t('Chưa thể mua')}</button>
               <div className="product-quick-actions">
-                <button type="button" aria-label={favoriteProducts.some((item) => item.id === product.id) ? `Bỏ yêu thích ${productName}` : `Thêm yêu thích ${productName}`} aria-pressed={favoriteProducts.some((item) => item.id === product.id)} onClick={() => toggleFavorite(product)}>
-                  {favoriteProducts.some((item) => item.id === product.id) ? '♥ Đã lưu' : '♡ Yêu thích'}
+                <button type="button" aria-label={favoriteProducts.some((item) => item.id === product.id) ? `${language === 'vi' ? 'Bỏ yêu thích' : 'Remove from favorites'} ${productName}` : `${language === 'vi' ? 'Thêm yêu thích' : 'Add to favorites'} ${productName}`} aria-pressed={favoriteProducts.some((item) => item.id === product.id)} onClick={() => toggleFavorite(product)}>
+                  {favoriteProducts.some((item) => item.id === product.id) ? `♥ ${t('Đã lưu')}` : `♡ ${t('Yêu thích')}`}
                 </button>
-                <button type="button" aria-label={compareProducts.some((item) => item.id === product.id) ? `Bỏ so sánh ${productName}` : `So sánh ${productName}`} aria-pressed={compareProducts.some((item) => item.id === product.id)} onClick={() => toggleComparison(product)}>
-                  {compareProducts.some((item) => item.id === product.id) ? '✓ So sánh' : '⇄ So sánh'}
+                <button type="button" aria-label={compareProducts.some((item) => item.id === product.id) ? `${language === 'vi' ? 'Bỏ so sánh' : 'Remove comparison'} ${productName}` : `${t('So sánh')} ${productName}`} aria-pressed={compareProducts.some((item) => item.id === product.id)} onClick={() => toggleComparison(product)}>
+                  {compareProducts.some((item) => item.id === product.id) ? `✓ ${t('So sánh')}` : `⇄ ${t('So sánh')}`}
                 </button>
               </div>
             </article>
@@ -1026,35 +1056,35 @@ function App() {
   }
 
   return (
-    <div className="store">
-      <a className="skip-link" href="#products">Bỏ qua điều hướng, đến danh sách sản phẩm</a>
-      <AppearanceSettings />
+    <div className="store" lang={language}>
+      <a className="skip-link" href="#products">{t('Bỏ qua điều hướng, đến danh sách sản phẩm')}</a>
+      <AppearanceSettings language={language} />
       <div className="service-bar">
         <div className="site-container service-inner">
-          <span><b>✦</b> TechStore — chọn thiết bị dễ dàng hơn</span>
+          <span><b>✦</b> {t('TechStore — chọn thiết bị dễ dàng hơn')}</span>
           <div className="service-links">
-            <a href="#products">Danh mục sản phẩm</a>
-            <button type="button" onClick={() => openSupportChat('Tư vấn cấu hình')}>Hỗ trợ chọn cấu hình</button>
-            <button type="button" onClick={() => openSupportChat()}>Liên hệ &amp; hỗ trợ</button>
+            <a href="#products">{t('Danh mục sản phẩm')}</a>
+            <button type="button" onClick={() => openSupportChat('Tư vấn cấu hình')}>{t('Hỗ trợ chọn cấu hình')}</button>
+            <button type="button" onClick={() => openSupportChat()}>{t('Liên hệ & hỗ trợ')}</button>
           </div>
         </div>
       </div>
 
       <header className="masthead">
         <div className="site-container masthead-inner">
-          <a className="brand-mark" href="/" aria-label="TechStore trang chủ">
+          <a className="brand-mark" href="/" aria-label={language === 'vi' ? 'TechStore trang chủ' : 'TechStore home'}>
             <img src="/techstore-mark.svg" alt="" fetchPriority="high" />
             <span>TECH<span>STORE</span></span>
           </a>
           <div className="category-menu-wrap">
-            <button className={`category-trigger ${menuOpen ? 'is-open' : ''}`} onClick={() => setMenuOpen((open) => !open)} aria-label="Danh mục sản phẩm" aria-expanded={menuOpen}>
+            <button className={`category-trigger ${menuOpen ? 'is-open' : ''}`} onClick={() => setMenuOpen((open) => !open)} aria-label={t('Danh mục sản phẩm')} aria-expanded={menuOpen}>
               <span className="category-trigger-icon">☷</span>
-              <span>Danh mục</span>
+              <span>{t('Danh mục')}</span>
               <span className="chevron">⌄</span>
             </button>
             {menuOpen && (
               <div className="category-popover">
-                <strong>Khám phá danh mục</strong>
+                <strong>{t('Khám phá danh mục')}</strong>
                 {categories.map((item) => (
                   <button key={item} onClick={() => chooseCategory(item)}>
                     <span>{categoryIcons[item] ?? '◇'}</span>{item}<span className="category-arrow">›</span>
@@ -1066,8 +1096,8 @@ function App() {
           <form className="header-search" onSubmit={search} role="search">
             <span aria-hidden="true">⌕</span>
             <input
-              aria-label="Tìm kiếm sản phẩm"
-              placeholder="Bạn muốn tìm sản phẩm gì?"
+              aria-label={t('Tìm kiếm sản phẩm')}
+              placeholder={t('Bạn muốn tìm sản phẩm gì?')}
               value={query}
               onChange={(event) => {
                 const nextQuery = event.target.value
@@ -1078,74 +1108,94 @@ function App() {
                 }
               }}
             />
-            {query && <button className="search-clear" type="button" aria-label="Xóa nội dung tìm kiếm" onClick={() => setQuery('')}>×</button>}
-            <button className="search-submit" type="submit" aria-label="Tìm kiếm">Tìm kiếm</button>
+            {query && <button className="search-clear" type="button" aria-label={language === 'vi' ? 'Xóa nội dung tìm kiếm' : 'Clear search'} onClick={() => setQuery('')}>×</button>}
+            <button className="search-submit" type="submit" aria-label={t('Tìm kiếm')}>{t('Tìm kiếm')}</button>
             {(searchSuggestions.length > 0 || searchSuggestionError) && (
-              <div className="search-suggestions" role="listbox" aria-label="Gợi ý sản phẩm">
+              <div className="search-suggestions" role="listbox" aria-label={t('Gợi ý sản phẩm')}>
                 {searchSuggestions.map((product) => (
                   <button type="button" role="option" aria-selected="false" key={product.id} onClick={() => openSuggestedProduct(product)}>
                     <span>{product.name}<small>{product.brand || product.category}</small></span>
-                    <strong>{product.price > 0 ? `${new Intl.NumberFormat('vi-VN').format(product.price)} ₫` : 'Liên hệ'}</strong>
+                    <strong>{product.price > 0 ? `${new Intl.NumberFormat(language === 'vi' ? 'vi-VN' : 'en-US').format(product.price)} ₫` : t('Liên hệ')}</strong>
                   </button>
                 ))}
-                {searchSuggestionError && <p role="alert">{searchSuggestionError}</p>}
+                {searchSuggestionError && <p role="alert">{t(searchSuggestionError)}</p>}
               </div>
             )}
           </form>
-          <button className="header-action location-action" type="button" aria-label={`Khu vực giao hàng: ${deliveryCity || 'chưa chọn'}`} title={deliveryCity || 'Chọn tỉnh/thành giao hàng'} onClick={() => { setLocationDraft(deliveryCity); setLocationOpen(true) }}>
-            <span className="action-icon">⌖</span><span><small>Khu vực giao hàng</small><b>{deliveryCity || 'Chọn tỉnh/thành'}</b></span>
+          <button className="header-action location-action" type="button" aria-label={`${t('Khu vực giao hàng')}: ${deliveryCity || t('chưa chọn')}`} title={deliveryCity || t('Chọn tỉnh/thành')} onClick={() => { setLocationDraft(deliveryCity); setLocationOpen(true) }}>
+            <span className="action-icon">⌖</span><span><small>{t('Khu vực giao hàng')}</small><b>{deliveryCity || t('Chọn tỉnh/thành')}</b></span>
           </button>
           <div className="account-controls">
-            <button className="header-action account-action" type="button" onClick={() => customer ? void logout() : openAuthDialog()} aria-label={customer ? 'Đăng xuất tài khoản' : 'Đăng nhập tài khoản'}>
-              <span className="action-icon">♙</span><span><small>{customer ? `Xin chào, ${customer.name}` : 'Xin chào'}</small><b>{customer ? 'Đăng xuất' : 'Đăng nhập'}</b></span>
+            <button className="header-action account-action" type="button" onClick={() => customer ? void logout() : openAuthDialog()} aria-label={customer ? t('Đăng xuất') : t('Đăng nhập')}>
+              <span className="action-icon">♙</span><span><small>{customer ? `${t('Xin chào')}, ${customer.name}` : t('Xin chào')}</small><b>{customer ? t('Đăng xuất') : t('Đăng nhập')}</b></span>
             </button>
           </div>
-          {customer && <button className="orders-header-action" type="button" onClick={openOrdersDialog}>Lịch sử mua hàng</button>}
-          <button className="cart-action" type="button" aria-label={`Mở giỏ hàng (${cart.items.length} sản phẩm)`} onClick={openCartDialog}>
-            <span className="cart-icon">♧</span><span>Giỏ hàng</span>{cart.items.length > 0 && <b className="cart-count">{cart.items.length}</b>}
+          {customer && <button className="orders-header-action" type="button" onClick={openOrdersDialog}>{t('Lịch sử mua hàng')}</button>}
+          <button className="cart-action" type="button" aria-label={language === 'vi' ? `Mở giỏ hàng (${cart.items.length} sản phẩm)` : `Open cart (${cart.items.length} products)`} onClick={openCartDialog}>
+            <span className="cart-icon">♧</span><span>{t('Giỏ hàng')}</span>{cart.items.length > 0 && <b className="cart-count">{cart.items.length}</b>}
           </button>
+          <div className="language-switch-wrap" ref={languageMenuRef}>
+            <button className="language-trigger" type="button" aria-label={language === 'vi' ? 'Chọn ngôn ngữ: Tiếng Việt' : 'Select language: English'} aria-haspopup="menu" aria-expanded={languageMenuOpen} onClick={() => setLanguageMenuOpen((open) => !open)}>
+              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7">
+                <circle cx="12" cy="12" r="10" />
+                <path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20" />
+              </svg>
+              <span>{language === 'vi' ? 'Tiếng Việt' : 'English'}</span>
+              <svg className="language-chevron" aria-hidden="true" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="m3 6 5 5 5-5" />
+              </svg>
+            </button>
+            {languageMenuOpen && <div className="language-menu" role="menu" aria-label={language === 'vi' ? 'Chọn ngôn ngữ' : 'Choose language'}>
+              <button type="button" role="menuitemradio" aria-checked={language === 'vi'} onClick={() => { setLanguage('vi'); setLanguageMenuOpen(false) }}>Tiếng Việt</button>
+              <button type="button" role="menuitemradio" aria-checked={language === 'en'} onClick={() => { setLanguage('en'); setLanguageMenuOpen(false) }}>English</button>
+            </div>}
+          </div>
         </div>
       </header>
 
       <nav className="quick-nav">
         <div className="site-container quick-nav-inner">
-          <span className="nav-caption">MUA SẮM THEO NHU CẦU</span>
+          <span className="nav-caption">{t('MUA SẮM THEO NHU CẦU')}</span>
           {featuredCategories.map((item) => (
             <button className={category === item ? 'quick-nav-active' : ''} key={item} onClick={() => chooseCategory(item)}>
-              <span>{categoryIcons[item] ?? '◇'}</span>{item}
+              <span>{categoryIcons[item] ?? '◇'}</span>{translateCategory(language, item)}
             </button>
           ))}
-          <a className="quick-nav-more" href="#products">Tất cả sản phẩm <span>→</span></a>
+          <a className="quick-nav-more" href="#products">{t('Tất cả sản phẩm')} <span>→</span></a>
         </div>
       </nav>
 
       <main className="site-container">
-        <section className="home-layout" aria-label="Khám phá TechStore">
+        <section className="home-layout" aria-label={language === 'vi' ? 'Khám phá TechStore' : 'Explore TechStore'}>
           <aside className="category-rail">
-            <div className="rail-heading"><span>☷</span> DANH MỤC SẢN PHẨM</div>
+            <div className="rail-heading"><span>☷</span> {t('DANH MỤC SẢN PHẨM')}</div>
             {featuredCategories.map((item) => (
               <button className={category === item ? 'rail-item rail-item-active' : 'rail-item'} key={item} onClick={() => chooseCategory(item)}>
-                <span className="rail-icon">{categoryIcons[item] ?? '◇'}</span><span>{item}</span><span className="rail-arrow">›</span>
+                <span className="rail-icon">{categoryIcons[item] ?? '◇'}</span><span>{translateCategory(language, item)}</span><span className="rail-arrow">›</span>
               </button>
             ))}
-            {categoriesError && <span className="rail-note" role="alert">{categoriesError}</span>}
-            <a className="rail-all" href="#products">Xem tất cả danh mục <span>→</span></a>
+            {categoriesError && <span className="rail-note" role="alert">{t(categoriesError)}</span>}
+            <a className="rail-all" href="#products">{t('Xem tất cả danh mục')} <span>→</span></a>
           </aside>
 
-          <section className="hero-banner" aria-label="Giới thiệu TechStore">
+          <section className="hero-banner" aria-label={t('Giới thiệu TechStore')}>
             <div className="banner-grid" aria-hidden="true" />
             <div className="banner-copy">
-              <span className="banner-kicker"><i /> {activeSlide.label}</span>
-              <h1>{activeSlide.title}<br /><span>{activeSlide.emphasis}</span></h1>
-              <p>{activeSlide.description}</p>
-              <a className="banner-cta" href="#products">Khám phá ngay <span>→</span></a>
-              <div className="banner-progress" aria-label="Chọn banner giới thiệu">
+              <span className="banner-kicker"><i /> {language === 'vi' ? activeSlide.label : ['TECHSTORE SELECTION', 'FIND WHAT FITS', 'CLEAR FROM THE START'][heroSlide]}</span>
+              <h1>{language === 'vi' ? activeSlide.title : ['Great technology.', 'Find your fit.', 'Clear from the start.'][heroSlide]}<br /><span>{language === 'vi' ? activeSlide.emphasis : ['Easy choices.', 'Enjoy every moment.', 'Shop with confidence.'][heroSlide]}</span></h1>
+              <p>{language === 'vi' ? activeSlide.description : [
+                'Explore devices for work, study, and everything you love.',
+                'Filter by category and find the right fit for the way you use your device.',
+                'Explore the complete product catalog, sourced directly from the store database.',
+              ][heroSlide]}</p>
+              <a className="banner-cta" href="#products">{language === 'vi' ? 'Khám phá ngay' : 'Explore now'} <span>→</span></a>
+              <div className="banner-progress" aria-label={t('Chọn banner giới thiệu')}>
                 {heroSlides.map((slide, index) => (
                   <button
                     key={slide.label}
                     type="button"
                     className={heroSlide === index ? 'active' : ''}
-                    aria-label={`Hiển thị banner ${index + 1}: ${slide.label}`}
+                    aria-label={language === 'vi' ? `Hiển thị banner ${index + 1}: ${slide.label}` : `Show banner ${index + 1}`}
                     aria-current={heroSlide === index ? 'true' : undefined}
                     onClick={() => setHeroSlide(index)}
                   />
@@ -1165,152 +1215,152 @@ function App() {
                 <div className="laptop-keyboard" />
               </div>
               <div className="art-label label-top">CURATED FOR YOU <span>✳</span></div>
-              <div className="art-label label-bottom"><span className="label-dot" /> CHỌN LỌC · MINH BẠCH · TIN CẬY</div>
+              <div className="art-label label-bottom"><span className="label-dot" /> {t('CHỌN LỌC · MINH BẠCH · TIN CẬY')}</div>
             </div>
-            <button className="banner-arrow banner-previous" type="button" aria-label="Banner trước" onClick={() => setHeroSlide((heroSlide + heroSlides.length - 1) % heroSlides.length)}>‹</button>
-            <button className="banner-arrow banner-next" type="button" aria-label="Banner tiếp theo" onClick={() => setHeroSlide((heroSlide + 1) % heroSlides.length)}>›</button>
+            <button className="banner-arrow banner-previous" type="button" aria-label={t('Banner trước')} onClick={() => setHeroSlide((heroSlide + heroSlides.length - 1) % heroSlides.length)}>‹</button>
+            <button className="banner-arrow banner-next" type="button" aria-label={t('Banner tiếp theo')} onClick={() => setHeroSlide((heroSlide + 1) % heroSlides.length)}>›</button>
             <div className="banner-index"><b>{String(heroSlide + 1).padStart(2, '0')}</b><span> / 03</span></div>
           </section>
 
           <aside className="promo-rail">
             <div className="promo-card promo-blue">
               <div className="promo-orbit" aria-hidden="true">✳</div>
-              <span className="promo-eyebrow">CHỌN MUA AN TÂM</span>
-              <h2>Giá rõ ràng.<br />Thông tin minh bạch.</h2>
-              <a href="#products">Tìm hiểu sản phẩm <span>→</span></a>
+              <span className="promo-eyebrow">{t('CHỌN MUA AN TÂM')}</span>
+              <h2>{t('Giá rõ ràng.')}<br />{t('Thông tin minh bạch.')}</h2>
+              <a href="#products">{t('Tìm hiểu sản phẩm')} <span>→</span></a>
             </div>
             <div className="promo-card promo-light">
               <span className="promo-icon">✦</span>
-              <span className="promo-eyebrow">CHAT VỚI CHATBOT</span>
-              <h2>Cần tư vấn?<br />TechStore luôn sẵn sàng.</h2>
-              <button type="button" onClick={() => openSupportChat()}>Bắt đầu trò chuyện <span aria-hidden="true">→</span></button>
+              <span className="promo-eyebrow">{t('CHAT VỚI CHATBOT')}</span>
+              <h2>{t('Cần tư vấn?')}<br />{t('TechStore luôn sẵn sàng.')}</h2>
+              <button type="button" onClick={() => openSupportChat()}>{t('Bắt đầu trò chuyện')} <span aria-hidden="true">→</span></button>
             </div>
           </aside>
         </section>
 
-        <section className="trust-strip" aria-label="Cam kết TechStore">
-          <div><span className="trust-symbol">✓</span><span><b>Thông tin rõ ràng</b><small>Giá và tồn kho theo dữ liệu cửa hàng</small></span></div>
-          <div><span className="trust-symbol">◇</span><span><b>Đầy đủ danh mục</b><small>Hiển thị sản phẩm từ cơ sở dữ liệu</small></span></div>
-          <div><span className="trust-symbol">✳</span><span><b>Tư vấn tận tâm</b><small>Tìm thiết bị hợp với nhu cầu</small></span></div>
+        <section className="trust-strip" aria-label={t('Cam kết TechStore')}>
+          <div><span className="trust-symbol">✓</span><span><b>{t('Thông tin rõ ràng')}</b><small>{t('Giá và tồn kho theo dữ liệu cửa hàng')}</small></span></div>
+          <div><span className="trust-symbol">◇</span><span><b>{t('Đầy đủ danh mục')}</b><small>{t('Hiển thị sản phẩm từ cơ sở dữ liệu')}</small></span></div>
+          <div><span className="trust-symbol">✳</span><span><b>{t('Tư vấn tận tâm')}</b><small>{t('Tìm thiết bị hợp với nhu cầu')}</small></span></div>
         </section>
 
         <section className="catalog-section" id="products">
-          {commerceNotice && <div className="commerce-toast" role="status"><span>{commerceNotice}</span><button type="button" aria-label="Đóng thông báo" onClick={() => setCommerceNotice('')}>×</button></div>}
+          {commerceNotice && <div className="commerce-toast" role="status"><span>{commerceNotice}</span><button type="button" aria-label={t('Đóng thông báo')} onClick={() => setCommerceNotice('')}>×</button></div>}
           <div className="section-heading">
             <div>
-              <span className="eyebrow">KHÁM PHÁ CỬA HÀNG</span>
-              <h2>{category ? category : 'Tất cả sản phẩm'}</h2>
+              <span className="eyebrow">{t('KHÁM PHÁ CỬA HÀNG')}</span>
+              <h2>{category ? translateCategory(language, category) : t('Tất cả sản phẩm')}</h2>
             </div>
             <div className="catalog-controls">
               <label className="filter-select">
-                <span className="visually-hidden">Lọc theo danh mục</span>
+                <span className="visually-hidden">{t('Lọc theo danh mục')}</span>
                 <select value={category} onChange={(event) => changeCategory(event.target.value)}>
-                  <option value="">Tất cả danh mục</option>
-                  {categories.map((item) => <option key={item} value={item}>{item}</option>)}
+                  <option value="">{t('Tất cả danh mục')}</option>
+                  {categories.map((item) => <option key={item} value={item}>{translateCategory(language, item)}</option>)}
                 </select>
               </label>
               <label className="filter-select sort-select">
-                <span className="visually-hidden">Sắp xếp sản phẩm</span>
+                <span className="visually-hidden">{t('Sắp xếp sản phẩm')}</span>
                 <select value={sort} onChange={(event) => selectSort(event.target.value)}>
-                  <option value="featured">Sắp xếp: Nổi bật</option>
-                  <option value="price_asc">Giá tăng dần</option>
-                  <option value="price_desc">Giá giảm dần</option>
-                  <option value="name">Tên A–Z</option>
-                  <option value="best_selling">Bán chạy</option>
-                  <option value="top_rated">Đánh giá cao</option>
+                  <option value="featured">{t('Sắp xếp: Nổi bật')}</option>
+                  <option value="price_asc">{t('Giá tăng dần')}</option>
+                  <option value="price_desc">{t('Giá giảm dần')}</option>
+                  <option value="name">{t('Tên A–Z')}</option>
+                  <option value="best_selling">{t('Bán chạy')}</option>
+                  <option value="top_rated">{t('Đánh giá cao')}</option>
                 </select>
               </label>
               <button className={showFavorites ? 'favorites-filter active' : 'favorites-filter'} type="button" aria-pressed={showFavorites} onClick={() => setShowFavorites((value) => !value)}>
-                ♡ Yêu thích ({favoriteProducts.length})
+                ♡ {t('Yêu thích')} ({favoriteProducts.length})
               </button>
             </div>
           </div>
 
           <form className="spec-filter-panel" onSubmit={applySpecificationFilters}>
-            <div className="spec-filter-title"><strong>{category ? `Lọc ${category}` : 'Lọc sản phẩm'}</strong><span>Thương hiệu và thông số được lấy từ sản phẩm trong cơ sở dữ liệu</span></div>
+            <div className="spec-filter-title"><strong>{category ? `${language === 'vi' ? 'Lọc' : 'Filter'} ${translateCategory(language, category)}` : language === 'vi' ? 'Lọc sản phẩm' : 'Filter products'}</strong><span>{language === 'vi' ? 'Thương hiệu và thông số được lấy từ sản phẩm trong cơ sở dữ liệu' : 'Brands and specifications are based on products in the store database'}</span></div>
             <div className="spec-filter-controls">
               {currentFacets?.brands.length ? (
-                <label><span>Thương hiệu</span><select value={specificationFilters.brand} onChange={(event) => setSpecificationFilters({ ...specificationFilters, brand: event.target.value })}>
-                  <option value="">Tất cả thương hiệu</option>
+                <label><span>{t('Thương hiệu')}</span><select value={specificationFilters.brand} onChange={(event) => setSpecificationFilters({ ...specificationFilters, brand: event.target.value })}>
+                  <option value="">{t('Tất cả thương hiệu')}</option>
                   {currentFacets.brands.map((option) => <option key={option.value} value={option.value}>{option.value} ({option.count})</option>)}
                 </select></label>
               ) : null}
               {currentFacets?.specifications.map((facet) => (
                 facet.options.length > 0 && <label key={facet.key}><span>{facet.label}</span><select value={specificationFilters[facet.key]} onChange={(event) => setSpecificationFilters({ ...specificationFilters, [facet.key]: event.target.value })}>
-                  <option value="">Tất cả</option>
+                  <option value="">{language === 'vi' ? 'Tất cả' : 'All'}</option>
                   {facet.options.map((option) => <option key={option.value} value={option.value}>{option.value} ({option.count})</option>)}
                 </select></label>
               ))}
-              <label><span>Giá từ (₫)</span><input type="number" min="0" step="100000" value={specificationFilters.min_price} onChange={(event) => setSpecificationFilters({ ...specificationFilters, min_price: event.target.value })} /></label>
-              <label><span>Đến (₫)</span><input type="number" min="0" step="100000" value={specificationFilters.max_price} onChange={(event) => setSpecificationFilters({ ...specificationFilters, max_price: event.target.value })} /></label>
-              <label className="quick-filter-checkbox"><span>Ưu đãi</span><span><input type="checkbox" checked={specificationFilters.on_sale === '1'} onChange={(event) => setSpecificationFilters({ ...specificationFilters, on_sale: event.target.checked ? '1' : '' })} /> Đang giảm giá</span></label>
-              <label><span>Đánh giá tối thiểu</span><select value={specificationFilters.min_rating} onChange={(event) => setSpecificationFilters({ ...specificationFilters, min_rating: event.target.value })}>
-                <option value="">Mọi mức đánh giá</option>
-                <option value="3">Từ 3 sao</option>
-                <option value="4">Từ 4 sao</option>
-                <option value="4.5">Từ 4,5 sao</option>
+              <label><span>{t('Giá từ (₫)')}</span><input type="number" min="0" step="100000" value={specificationFilters.min_price} onChange={(event) => setSpecificationFilters({ ...specificationFilters, min_price: event.target.value })} /></label>
+              <label><span>{t('Đến (₫)')}</span><input type="number" min="0" step="100000" value={specificationFilters.max_price} onChange={(event) => setSpecificationFilters({ ...specificationFilters, max_price: event.target.value })} /></label>
+              <label className="quick-filter-checkbox"><span>{t('Ưu đãi')}</span><span><input type="checkbox" checked={specificationFilters.on_sale === '1'} onChange={(event) => setSpecificationFilters({ ...specificationFilters, on_sale: event.target.checked ? '1' : '' })} /> {t('Đang giảm giá')}</span></label>
+              <label><span>{t('Đánh giá tối thiểu')}</span><select value={specificationFilters.min_rating} onChange={(event) => setSpecificationFilters({ ...specificationFilters, min_rating: event.target.value })}>
+                <option value="">{t('Mọi mức đánh giá')}</option>
+                <option value="3">{t('Từ 3 sao')}</option>
+                <option value="4">{t('Từ 4 sao')}</option>
+                <option value="4.5">{t('Từ 4,5 sao')}</option>
               </select></label>
             </div>
             <div className="spec-filter-actions">
-              <button className="filter-reset" type="button" onClick={clearSpecificationFilters}>Xóa bộ lọc</button>
-              <button className="filter-apply" type="submit">Áp dụng bộ lọc</button>
+              <button className="filter-reset" type="button" onClick={clearSpecificationFilters}>{t('Xóa bộ lọc')}</button>
+              <button className="filter-apply" type="submit">{t('Áp dụng bộ lọc')}</button>
             </div>
           </form>
 
-          {categoriesError && <p className="tool-error" role="alert">{categoriesError} <button type="button" className="inline-retry" onClick={() => { setCategoriesError(''); setCategoriesRetry((attempt) => attempt + 1) }}>Thử tải lại</button></p>}
-          {facetsError && <p className="tool-error" role="alert">{facetsError}</p>}
+          {categoriesError && <p className="tool-error" role="alert">{t(categoriesError)} <button type="button" className="inline-retry" onClick={() => { setCategoriesError(''); setCategoriesRetry((attempt) => attempt + 1) }}>{t('Thử tải lại')}</button></p>}
+          {facetsError && <p className="tool-error" role="alert">{t(facetsError)}</p>}
           <div className="results-line" role="status" aria-live="polite">
-            <span>{showFavorites ? `${favoriteProducts.length} sản phẩm yêu thích` : loading ? 'Đang tải sản phẩm…' : !category && requestedCategories.length < categories.length ? `${total} sản phẩm đã tải · Cuộn để tải thêm danh mục` : `${total} sản phẩm`}</span>
+            <span>{showFavorites ? `${favoriteProducts.length} ${t('sản phẩm yêu thích')}` : loading ? t('Đang tải sản phẩm…') : !category && requestedCategories.length < categories.length ? language === 'vi' ? `${total} sản phẩm đã tải · Cuộn để tải thêm danh mục` : `${total} products loaded · Scroll to load more categories` : `${total} ${t('sản phẩm')}`}</span>
             {submittedQuery && <button className="clear-search" onClick={() => {
               setQuery('')
               setSubmittedQuery('')
               syncCatalogUrl({ query: '', category, sort, filters: appliedSpecificationFilters })
-            }}>Xóa tìm kiếm ×</button>}
+            }}>{t('Xóa tìm kiếm')} ×</button>}
           </div>
 
           {!showFavorites && !loading && !hasProducts && !visibleCatalogs.some(({ catalog }) => catalog?.error)
             && (Boolean(category) || (hasCatalogCriteria && visibleCatalogs.length > 0)) && (
             <div className="state-message empty-state" role="status" aria-live="polite">
               <span className="empty-icon" aria-hidden="true">◇</span>
-              <h3>Không tìm thấy sản phẩm phù hợp</h3>
-              <p>{submittedQuery ? `Không có kết quả cho “${submittedQuery}”. ` : ''}Thử từ khóa khác, chọn danh mục khác hoặc bỏ bớt bộ lọc.</p>
+              <h3>{t('Không tìm thấy sản phẩm phù hợp')}</h3>
+              <p>{submittedQuery ? language === 'vi' ? `Không có kết quả cho “${submittedQuery}”. ` : `No results for “${submittedQuery}”. ` : ''}{t('Thử từ khóa khác, chọn danh mục khác hoặc bỏ bớt bộ lọc.')}</p>
               <div className="empty-state-actions">
                 {submittedQuery && <button className="empty-reset-button" type="button" onClick={() => {
                   setQuery('')
                   setSubmittedQuery('')
                   syncCatalogUrl({ query: '', category, sort, filters: appliedSpecificationFilters })
-                }}>Xóa tìm kiếm</button>}
-                {Object.values(appliedSpecificationFilters).some(Boolean) && <button className="empty-reset-button" type="button" onClick={clearSpecificationFilters}>Xóa bộ lọc</button>}
-                <button className="empty-reset-button" type="button" onClick={resetCatalogCriteria}>Xem tất cả sản phẩm</button>
+                }}>{t('Xóa tìm kiếm')}</button>}
+                {Object.values(appliedSpecificationFilters).some(Boolean) && <button className="empty-reset-button" type="button" onClick={clearSpecificationFilters}>{t('Xóa bộ lọc')}</button>}
+                <button className="empty-reset-button" type="button" onClick={resetCatalogCriteria}>{t('Xem tất cả sản phẩm')}</button>
               </div>
             </div>
           )}
           {showFavorites ? favoriteProducts.length ? (
-            <section className="product-group" aria-label="Sản phẩm yêu thích">
-              <h3 className="product-group-title">Danh sách yêu thích</h3>
+            <section className="product-group" aria-label={t('Danh sách yêu thích')}>
+              <h3 className="product-group-title">{t('Danh sách yêu thích')}</h3>
               {renderProductGrid(favoriteProducts)}
             </section>
-          ) : <div className="state-message empty-state"><h3>Chưa có sản phẩm yêu thích</h3><p>Nhấn biểu tượng trái tim trên sản phẩm để lưu vào danh sách này.</p></div> : visibleCategories.length > 0 && (
+          ) : <div className="state-message empty-state"><h3>{t('Chưa có sản phẩm yêu thích')}</h3><p>{t('Nhấn biểu tượng trái tim trên sản phẩm để lưu vào danh sách này.')}</p></div> : visibleCategories.length > 0 && (
             <>
               {renderedCatalogs.map(({ name, catalog: groupCatalog }) => {
                 const loadingKey = JSON.stringify([catalogKey, name])
                 return <section className="product-group" data-catalog-category={name} key={name} aria-label={name}>
-                  <h3 className="product-group-title">{name}</h3>
-                  {groupCatalog?.error && <p className="tool-error" role="alert">{groupCatalog.error} <button type="button" className="inline-retry" onClick={() => retryCatalog(name)}>Tải lại danh mục {name}</button></p>}
+                  <h3 className="product-group-title">{translateCategory(language, name)}</h3>
+                  {groupCatalog?.error && <p className="tool-error" role="alert">{t(groupCatalog.error)} <button type="button" className="inline-retry" onClick={() => retryCatalog(name)}>{language === 'vi' ? `Tải lại danh mục ${name}` : `Reload ${translateCategory(language, name)} category`}</button></p>}
                   {groupCatalog?.products.length
                     ? renderProductGrid(groupCatalog.products)
                     : requestedCategories.includes(name) || category === name
-                      ? <div className="product-grid" aria-label={`Đang tải ${name}`}>{Array.from({ length: 4 }, (_, index) => <div className="skeleton-card" key={index} />)}</div>
-                      : <div className="catalog-deferred" aria-label={`Danh mục ${name} sẽ tải khi cuộn`}>Cuộn xuống để tải sản phẩm {name}</div>}
+                      ? <div className="product-grid" aria-label={`${language === 'vi' ? 'Đang tải' : 'Loading'} ${translateCategory(language, name)}`}>{Array.from({ length: 4 }, (_, index) => <div className="skeleton-card" key={index} />)}</div>
+                      : <div className="catalog-deferred" aria-label={language === 'vi' ? `Danh mục ${name} sẽ tải khi cuộn` : `${translateCategory(language, name)} will load as you scroll`}>{language === 'vi' ? `Cuộn xuống để tải sản phẩm ${name}` : `Scroll down to load ${translateCategory(language, name)}`}</div>}
                   {(groupCatalog?.products.length ?? 0) < (groupCatalog?.total ?? 0) && (
                     <div className="load-more">
                       <button
                         className="load-more-button"
-                        aria-label={`Xem thêm sản phẩm ${name}`}
+                        aria-label={language === 'vi' ? `Xem thêm sản phẩm ${name}` : `Load more ${translateCategory(language, name)} products`}
                         disabled={loadingMore[loadingKey] ?? false}
                         onClick={() => void loadMoreProducts(name)}
                       >
-                        {loadingMore[loadingKey] ? 'Đang tải…' : 'Xem thêm'}
+                        {loadingMore[loadingKey] ? '…' : language === 'vi' ? 'Xem thêm' : 'Load more'}
                       </button>
                     </div>
                   )}
@@ -1321,11 +1371,11 @@ function App() {
         </section>
 
         <section className="about-strip" id="about">
-          <span>TECHSTORE — CÔNG NGHỆ GẦN HƠN VỚI BẠN</span>
-          <p>Trợ lý sẽ phân loại nhu cầu, ngân sách và mục đích sử dụng để tìm sản phẩm đang bán; cần thêm trợ giúp, bạn có thể chuyển tiếp cho nhân viên.</p>
+          <span>{t('TECHSTORE — CÔNG NGHỆ GẦN HƠN VỚI BẠN')}</span>
+          <p>{t('Trợ lý sẽ phân loại nhu cầu, ngân sách và mục đích sử dụng để tìm sản phẩm đang bán; cần thêm trợ giúp, bạn có thể chuyển tiếp cho nhân viên.')}</p>
           <div className="about-actions">
-            <button type="button" onClick={() => openSupportChat('Tư vấn cấu hình')}>Bắt đầu tư vấn cấu hình</button>
-            <button type="button" onClick={() => openSupportChat()}>Chat với hỗ trợ</button>
+            <button type="button" onClick={() => openSupportChat('Tư vấn cấu hình')}>{t('Bắt đầu tư vấn cấu hình')}</button>
+            <button type="button" onClick={() => openSupportChat()}>{t('Chat với hỗ trợ')}</button>
           </div>
           <span className="about-star" aria-hidden="true">✳</span>
         </section>
@@ -1333,60 +1383,60 @@ function App() {
 
       {selectedSlug && (
         <div className="detail-backdrop" role="presentation" onClick={closeProduct}>
-          <section className="detail-dialog" role="dialog" aria-modal="true" aria-label="Chi tiết sản phẩm" onClick={(event) => event.stopPropagation()}>
-            <button className="detail-close" onClick={closeProduct} aria-label="Đóng chi tiết">×</button>
-            {!detailProduct && !detailError && <p className="detail-status">Đang tải thông tin sản phẩm…</p>}
-            {detailError && <p className="detail-status error-state" role="alert">{detailError}</p>}
+          <section className="detail-dialog" role="dialog" aria-modal="true" aria-label={t('Chi tiết sản phẩm')} onClick={(event) => event.stopPropagation()}>
+            <button className="detail-close" onClick={closeProduct} aria-label={`${t('Đóng')} ${t('Chi tiết sản phẩm')}`}>×</button>
+            {!detailProduct && !detailError && <p className="detail-status">{t('Đang tải thông tin sản phẩm…')}</p>}
+            {detailError && <p className="detail-status error-state" role="alert">{t(detailError)}</p>}
             {detailProduct && (
               <div className="detail-content">
                 <div className="detail-image">
                   {productPhoto({ ...detailProduct, images: detailProduct.images[detailImageIndex] ? [detailProduct.images[detailImageIndex]] : [] }, undefined, 'eager', '(max-width: 560px) 90vw, 360px')}
-                  {detailProduct.images.length > 1 && <div className="detail-thumbnails" aria-label="Ảnh sản phẩm">
-                    {detailProduct.images.map((image, index) => <button type="button" key={`${image.url}-${index}`} className={detailImageIndex === index ? 'active' : ''} aria-label={`Xem ảnh ${index + 1}`} aria-pressed={detailImageIndex === index} onClick={() => setDetailImageIndex(index)}><img src={image.url} alt={image.alt ?? ''} loading="lazy" /></button>)}
+                  {detailProduct.images.length > 1 && <div className="detail-thumbnails" aria-label={t('Ảnh sản phẩm')}>
+                    {detailProduct.images.map((image, index) => <button type="button" key={`${image.url}-${index}`} className={detailImageIndex === index ? 'active' : ''} aria-label={`${language === 'vi' ? 'Xem ảnh' : 'View image'} ${index + 1}`} aria-pressed={detailImageIndex === index} onClick={() => setDetailImageIndex(index)}><img src={image.url} alt={image.alt ?? ''} loading="lazy" /></button>)}
                   </div>}
                 </div>
                 <div className="detail-copy">
-                  <span className="eyebrow">{detailProduct.category} {detailProduct.brand && `· ${detailProduct.brand}`}</span>
+                  <span className="eyebrow">{detailProduct.category && translateCategory(language, detailProduct.category)} {detailProduct.brand && `· ${detailProduct.brand}`}</span>
                   <h2>{detailProduct.name}</h2>
-                  <strong>{detailProduct.price > 0 ? `${new Intl.NumberFormat('vi-VN').format(detailProduct.price)} ₫` : 'Đang cập nhật giá'}</strong>
+                  <strong>{detailProduct.price > 0 ? `${new Intl.NumberFormat(numberLocale).format(detailProduct.price)} ₫` : t('Đang cập nhật giá')}</strong>
                   {detailProduct.list_price !== null && detailProduct.list_price > detailProduct.price && (
                     <>
-                      <del>{new Intl.NumberFormat('vi-VN').format(detailProduct.list_price)} ₫</del>
-                      <span className="detail-discount">Giảm {Math.round((1 - detailProduct.price / detailProduct.list_price) * 100)}% · Tiết kiệm {new Intl.NumberFormat('vi-VN').format(detailProduct.list_price - detailProduct.price)} ₫</span>
+                      <del>{new Intl.NumberFormat(numberLocale).format(detailProduct.list_price)} ₫</del>
+                      <span className="detail-discount">{t('Giảm')} {Math.round((1 - detailProduct.price / detailProduct.list_price) * 100)}% · {t('Tiết kiệm')} {new Intl.NumberFormat(numberLocale).format(detailProduct.list_price - detailProduct.price)} ₫</span>
                     </>
                   )}
-                  <p>{detailProduct.description || 'Thông tin mô tả đang được cập nhật.'}</p>
-                  <span className="detail-stock"><i className={detailProduct.purchasable ? 'stock-available' : 'stock-unavailable'} />{detailProduct.purchasable ? `Còn hàng · ${detailProduct.stock} sản phẩm` : detailProduct.stock <= 0 ? 'Hết hàng' : 'Sản phẩm chưa mở bán'}</span>
+                  <p>{detailProduct.description || t('Thông tin mô tả đang được cập nhật.')}</p>
+                  <span className="detail-stock"><i className={detailProduct.purchasable ? 'stock-available' : 'stock-unavailable'} />{detailProduct.purchasable ? `${t('Còn hàng')} · ${detailProduct.stock} ${t('sản phẩm')}` : detailProduct.stock <= 0 ? t('Hết hàng') : t('Sản phẩm chưa mở bán')}</span>
                   <div className="product-delivery-info">
-                    <p><strong>Bảo hành</strong><span>Thời hạn bảo hành được kích hoạt và tra cứu theo serial sau khi đơn hàng hoàn tất.</span></p>
-                    <p><strong>Giao hàng</strong><span>Phí và ngày giao dự kiến sẽ được cửa hàng xác nhận sau khi tiếp nhận đơn.</span></p>
+                    <p><strong>{t('Bảo hành')}</strong><span>{t('Thời hạn bảo hành được kích hoạt và tra cứu theo serial sau khi đơn hàng hoàn tất.')}</span></p>
+                    <p><strong>{t('Giao hàng')}</strong><span>{t('Phí và ngày giao dự kiến sẽ được cửa hàng xác nhận sau khi tiếp nhận đơn.')}</span></p>
                   </div>
                   <div className="detail-actions">
-                    <button type="button" aria-pressed={favoriteProducts.some((item) => item.id === detailProduct.id)} onClick={() => toggleFavorite(detailProduct)}>{favoriteProducts.some((item) => item.id === detailProduct.id) ? '♥ Đã yêu thích' : '♡ Yêu thích'}</button>
-                    <button type="button" aria-pressed={compareProducts.some((item) => item.id === detailProduct.id)} onClick={() => toggleComparison(detailProduct)}>{compareProducts.some((item) => item.id === detailProduct.id) ? '✓ Đang so sánh' : '⇄ So sánh'}</button>
+                    <button type="button" aria-pressed={favoriteProducts.some((item) => item.id === detailProduct.id)} onClick={() => toggleFavorite(detailProduct)}>{favoriteProducts.some((item) => item.id === detailProduct.id) ? `♥ ${t('Đã yêu thích')}` : `♡ ${t('Yêu thích')}`}</button>
+                    <button type="button" aria-pressed={compareProducts.some((item) => item.id === detailProduct.id)} onClick={() => toggleComparison(detailProduct)}>{compareProducts.some((item) => item.id === detailProduct.id) ? `✓ ${t('Đang so sánh')}` : `⇄ ${t('So sánh')}`}</button>
                   </div>
-                  <button className="primary-button detail-add-cart" type="button" disabled={!detailProduct.purchasable} onClick={() => { void addToCart(detailProduct.id, detailProduct); closeProduct() }}>{detailProduct.purchasable ? 'Thêm vào giỏ hàng' : 'Chưa thể mua'}</button>
-                  <section className="product-reviews" aria-label="Đánh giá sản phẩm">
-                    <h3>Đánh giá khách hàng</h3>
-                    <p>{reviewSummary.review_count ? `${reviewSummary.average_rating}/5 · ${reviewSummary.review_count} đánh giá khách hàng` : 'Chưa có đánh giá khách hàng thật'}</p>
-                    {reviewSummary.demo_review_count > 0 && <p>Hiển thị {reviewSummary.demo_review_count} đánh giá mẫu; nội dung này không phải phản hồi khách hàng thật.</p>}
-                    {reviewMessage && <p role="status">{reviewMessage}</p>}
+                  <button className="primary-button detail-add-cart" type="button" disabled={!detailProduct.purchasable} onClick={() => { void addToCart(detailProduct.id, detailProduct); closeProduct() }}>{detailProduct.purchasable ? t('Thêm vào giỏ hàng') : t('Chưa thể mua')}</button>
+                  <section className="product-reviews" aria-label={t('Đánh giá sản phẩm')}>
+                    <h3>{t('Đánh giá khách hàng')}</h3>
+                    <p>{reviewSummary.review_count ? `${reviewSummary.average_rating}/5 · ${reviewSummary.review_count} ${language === 'vi' ? 'đánh giá khách hàng' : 'customer reviews'}` : t('Chưa có đánh giá khách hàng thật')}</p>
+                    {reviewSummary.demo_review_count > 0 && <p>{language === 'vi' ? `Hiển thị ${reviewSummary.demo_review_count} đánh giá mẫu; nội dung này không phải phản hồi khách hàng thật.` : `Showing ${reviewSummary.demo_review_count} sample reviews; these are not real customer feedback.`}</p>}
+                    {reviewMessage && <p role="status">{t(reviewMessage)}</p>}
                     {productReviews.map((review, index) => (
                       <article className="product-review" key={`${review.created_at}-${index}`}>
                         <strong>{review.name || 'Khách hàng'}{review.is_demo && ' · MẪU'} · {review.rating}/5</strong>
                         <p>{review.content}</p>
-                        <time>{new Date(review.created_at).toLocaleDateString('vi-VN')}</time>
+                        <time>{new Date(review.created_at).toLocaleDateString(numberLocale)}</time>
                       </article>
                     ))}
                     {customer && (
                       <form className="review-form" onSubmit={(event) => void submitProductReview(event)}>
-                        <label>Chấm điểm
+                        <label>{t('Chấm điểm')}
                           <select value={reviewRating} onChange={(event) => setReviewRating(Number(event.target.value))}>
-                            {[5, 4, 3, 2, 1].map((rating) => <option key={rating} value={rating}>{rating} sao</option>)}
+                            {[5, 4, 3, 2, 1].map((rating) => <option key={rating} value={rating}>{rating} {language === 'vi' ? 'sao' : 'stars'}</option>)}
                           </select>
                         </label>
-                        <label>Nội dung đánh giá<textarea required minLength={3} maxLength={2000} value={reviewContent} onChange={(event) => setReviewContent(event.target.value)} /></label>
-                        <button className="primary-button" type="submit">Gửi đánh giá</button>
+                        <label>{t('Nội dung đánh giá')}<textarea required minLength={3} maxLength={2000} value={reviewContent} onChange={(event) => setReviewContent(event.target.value)} /></label>
+                        <button className="primary-button" type="submit">{t('Gửi đánh giá')}</button>
                       </form>
                     )}
                   </section>
@@ -1402,51 +1452,52 @@ function App() {
                 </div>
               </div>
             )}
-            {detailProduct && relatedProducts.length > 0 && <section className="related-products"><h3>Sản phẩm liên quan</h3>{renderProductGrid(relatedProducts)}</section>}
+            {detailProduct && relatedProducts.length > 0 && <section className="related-products"><h3>{t('Sản phẩm liên quan')}</h3>{renderProductGrid(relatedProducts)}</section>}
           </section>
         </div>
       )}
 
-      {compareProducts.length > 0 && <aside className="compare-tray" aria-label="Thanh so sánh sản phẩm">
-        <span>Đang chọn so sánh: <strong>{compareProducts.length}/4</strong></span>
-        <button type="button" onClick={() => setCompareOpen(true)} disabled={compareProducts.length < 2}>So sánh ngay</button>
-        <button type="button" onClick={() => setCompareProducts([])}>Xóa</button>
+      {compareProducts.length > 0 && <aside className="compare-tray" aria-label={language === 'vi' ? 'Thanh so sánh sản phẩm' : 'Product comparison tray'}>
+        <span>{t('Đang chọn so sánh:')} <strong>{compareProducts.length}/4</strong></span>
+        <button type="button" onClick={() => setCompareOpen(true)} disabled={compareProducts.length < 2}>{t('So sánh ngay')}</button>
+        <button type="button" onClick={() => setCompareProducts([])}>{t('Xóa')}</button>
       </aside>}
       {compareOpen && <Suspense fallback={null}>
-        <ProductComparisonDialog products={compareProducts} onClose={() => setCompareOpen(false)} />
+        <ProductComparisonDialog products={compareProducts} onClose={() => setCompareOpen(false)} language={language} />
       </Suspense>}
 
       <footer className="site-footer">
         <div className="footer-main">
           <div className="footer-brand-column">
             <a className="brand-mark" href="/"><img src="/techstore-mark.svg" alt="" /><span>TECH<span>STORE</span></span></a>
-            <p>Thiết bị công nghệ cho học tập, công việc và giải trí. Chọn đúng sản phẩm, an tâm theo dõi đơn hàng.</p>
+            <p>{t('Thiết bị công nghệ cho học tập, công việc và giải trí. Chọn đúng sản phẩm, an tâm theo dõi đơn hàng.')}</p>
           </div>
-          <nav className="footer-column" aria-label="Khám phá TechStore">
-            <strong>Khám phá</strong>
-            <a href="#products">Tất cả sản phẩm</a>
+          <nav className="footer-column" aria-label={language === 'vi' ? 'Khám phá TechStore' : 'Explore TechStore'}>
+            <strong>{t('Khám phá')}</strong>
+            <a href="#products">{t('Tất cả sản phẩm')}</a>
             <a href="#products" onClick={() => changeCategory('Laptop')}>Laptop</a>
-            <button type="button" onClick={() => customer ? openOrdersDialog() : openAuthDialog()}>Lịch sử mua hàng</button>
+            <button type="button" onClick={() => customer ? openOrdersDialog() : openAuthDialog()}>{t('Lịch sử mua hàng')}</button>
           </nav>
-          <nav className="footer-column" aria-label="Hỗ trợ khách hàng">
-            <strong>Hỗ trợ khách hàng</strong>
-            <button type="button" onClick={() => openSupportChat()}>Liên hệ tư vấn</button>
-            <button type="button" onClick={() => openSupportChat('Hỗ trợ đơn hàng')}>Hỗ trợ đơn hàng</button>
-            <button type="button" onClick={() => openSupportChat('Chính sách đổi trả')}>Đổi trả và bảo hành</button>
+          <nav className="footer-column" aria-label={t('Hỗ trợ khách hàng')}>
+            <strong>{t('Hỗ trợ khách hàng')}</strong>
+            <button type="button" onClick={() => openSupportChat()}>{t('Liên hệ tư vấn')}</button>
+            <button type="button" onClick={() => openSupportChat('Hỗ trợ đơn hàng')}>{t('Hỗ trợ đơn hàng')}</button>
+            <button type="button" onClick={() => openSupportChat('Chính sách đổi trả')}>{t('Đổi trả và bảo hành')}</button>
           </nav>
           <div className="footer-column">
             <strong>TechStore</strong>
-            <a href="#about">Về chúng tôi</a>
-            <a href="/admin">Quản trị viên</a>
+            <a href="#about">{t('Về chúng tôi')}</a>
+            <a href="/admin">{t('Quản trị viên')}</a>
           </div>
         </div>
         <div className="footer-bottom">
-          <span>© 2026 TechStore. Đồ án cửa hàng thiết bị công nghệ.</span>
-          <span>Giá và tình trạng sản phẩm được cập nhật theo dữ liệu cửa hàng.</span>
+          <span>© 2026 TechStore. {t('Đồ án cửa hàng thiết bị công nghệ.')}</span>
+          <span>{t('Giá và tình trạng sản phẩm được cập nhật theo dữ liệu cửa hàng.')}</span>
         </div>
       </footer>
       {(commerceDialogsLoaded || authOpen || cartOpen || pendingCheckout || resumeCheckout) && <Suspense fallback={null}>
         <CommerceDialogs
+          language={language}
           token={authToken}
           customer={customer}
           cart={cart}
@@ -1466,17 +1517,17 @@ function App() {
           onRemoveItem={removeCartItem}
         />
       </Suspense>}
-      <ChatWidget />
+      <ChatWidget language={language} />
       {locationOpen && (
         <div className="commerce-backdrop" role="presentation" onClick={() => setLocationOpen(false)}>
           <section className="commerce-dialog location-dialog" role="dialog" aria-modal="true" aria-labelledby="location-title" onClick={(event) => event.stopPropagation()}>
-            <button className="commerce-close" type="button" onClick={() => setLocationOpen(false)} aria-label="Đóng">×</button>
-            <span className="eyebrow">ĐỊA CHỈ NHẬN HÀNG</span>
-            <h2 id="location-title">Chọn khu vực giao hàng</h2>
-            <p className="commerce-intro">Chọn tỉnh/thành để điền nhanh khi đặt hàng. Khu vực chưa dùng để tính phí giao hàng hay tồn kho.</p>
+            <button className="commerce-close" type="button" onClick={() => setLocationOpen(false)} aria-label={t('Đóng')}>×</button>
+            <span className="eyebrow">{t('ĐỊA CHỈ NHẬN HÀNG')}</span>
+            <h2 id="location-title">{t('Chọn khu vực giao hàng')}</h2>
+            <p className="commerce-intro">{t('Chọn tỉnh/thành để điền nhanh khi đặt hàng. Khu vực chưa dùng để tính phí giao hàng hay tồn kho.')}</p>
             <form className="commerce-form" onSubmit={saveDeliveryCity}>
-              <label>Tỉnh / thành phố<input required maxLength={100} autoComplete="address-level1" value={locationDraft} onChange={(event) => setLocationDraft(event.target.value)} placeholder="Ví dụ: Thành phố Hồ Chí Minh" /></label>
-              <button className="primary-button" type="submit">Lưu khu vực</button>
+              <label>{t('Tỉnh / thành phố')}<input required maxLength={100} autoComplete="address-level1" value={locationDraft} onChange={(event) => setLocationDraft(event.target.value)} placeholder={t('Ví dụ: Thành phố Hồ Chí Minh')} /></label>
+              <button className="primary-button" type="submit">{t('Lưu khu vực')}</button>
             </form>
           </section>
         </div>

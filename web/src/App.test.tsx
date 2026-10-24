@@ -99,6 +99,24 @@ describe('appearance settings', () => {
 })
 
 describe('storefront catalog', () => {
+  it('switches the storefront language and persists the selection', async () => {
+    const { unmount } = render(<App />)
+
+    fireEvent.click(screen.getByRole('button', { name: 'Chọn ngôn ngữ: Tiếng Việt' }))
+    fireEvent.click(screen.getByRole('menuitemradio', { name: 'English' }))
+
+    expect(document.documentElement.lang).toBe('en')
+    expect(localStorage.getItem('techstore-language')).toBe('en')
+    expect(screen.getByText('EXPLORE THE STORE')).toBeTruthy()
+    expect(screen.getByRole('button', { name: 'Select language: English' })).toBeTruthy()
+
+    unmount()
+    render(<App />)
+
+    expect(document.documentElement.lang).toBe('en')
+    expect(screen.getByRole('button', { name: 'Select language: English' })).toBeTruthy()
+  })
+
   it('opens order history directly from the header for signed-in customers', async () => {
     sessionStorage.setItem('techstore-token', 'test-token')
     vi.stubGlobal('fetch', vi.fn(async (input: RequestInfo | URL) => {

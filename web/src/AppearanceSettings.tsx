@@ -1,5 +1,7 @@
 import { useLayoutEffect, useState } from 'react'
 import type { CSSProperties } from 'react'
+import { translate } from './language'
+import type { Language } from './language'
 
 type ThemeMode = 'light' | 'dark'
 type Palette = { id: string; label: string; primary: string; dark: string; soft: string }
@@ -43,7 +45,8 @@ function applyPreferences(mode: ThemeMode, paletteId: string) {
   root.style.setProperty('--blue-soft', palette.soft)
 }
 
-export function AppearanceSettings() {
+export function AppearanceSettings({ language = 'vi' }: { language?: Language }) {
+  const t = (text: string) => translate(language, text)
   const [mode, setMode] = useState<ThemeMode>(() => loadPreferences().mode)
   const [paletteId, setPaletteId] = useState(() => loadPreferences().paletteId)
   const [open, setOpen] = useState(false)
@@ -58,40 +61,40 @@ export function AppearanceSettings() {
       <button
         className="appearance-launcher"
         type="button"
-        aria-label="Tùy chỉnh giao diện"
+        aria-label={t('Tùy chỉnh giao diện')}
         aria-expanded={open}
         onClick={() => setOpen((current) => !current)}
       >
         <span aria-hidden="true">◉</span>
-        <span>Giao diện</span>
+        <span>{t('Giao diện')}</span>
       </button>
       {open && (
-        <section className="appearance-panel" aria-label="Tùy chỉnh giao diện">
+        <section className="appearance-panel" aria-label={t('Tùy chỉnh giao diện')}>
           <header className="appearance-heading">
             <span className="appearance-heading-icon" aria-hidden="true">◉</span>
-            <span><strong>Giao diện</strong><small>Tùy chỉnh màu sắc cá nhân</small></span>
-            <button type="button" aria-label="Đóng tùy chỉnh giao diện" onClick={() => setOpen(false)}>×</button>
+            <span><strong>{t('Giao diện')}</strong><small>{t('Tùy chỉnh màu sắc cá nhân')}</small></span>
+            <button type="button" aria-label={t('Đóng tùy chỉnh giao diện')} onClick={() => setOpen(false)}>×</button>
           </header>
           <fieldset className="appearance-mode">
-            <legend>Chế độ hiển thị</legend>
+            <legend>{t('Chế độ hiển thị')}</legend>
             <button className={mode === 'light' ? 'selected' : ''} type="button" aria-pressed={mode === 'light'} onClick={() => setMode('light')}>
-              <span aria-hidden="true">☼</span>Sáng
+              <span aria-hidden="true">☼</span>{t('Sáng')}
             </button>
             <button className={mode === 'dark' ? 'selected' : ''} type="button" aria-pressed={mode === 'dark'} onClick={() => setMode('dark')}>
-              <span aria-hidden="true">☾</span>Tối
+              <span aria-hidden="true">☾</span>{t('Tối')}
             </button>
           </fieldset>
           <fieldset className="appearance-colors">
-            <legend>Màu chủ đạo</legend>
+            <legend>{t('Màu chủ đạo')}</legend>
             <div>
               {palettes.map((palette) => (
                 <button
                   key={palette.id}
                   type="button"
                   className={paletteId === palette.id ? 'selected' : ''}
-                  aria-label={`Màu chủ đạo: ${palette.label}`}
+                  aria-label={`${t('Màu chủ đạo')}: ${t(palette.label)}`}
                   aria-pressed={paletteId === palette.id}
-                  title={palette.label}
+                  title={t(palette.label)}
                   style={{ '--swatch-color': palette.primary } as CSSProperties}
                   onClick={() => setPaletteId(palette.id)}
                 />

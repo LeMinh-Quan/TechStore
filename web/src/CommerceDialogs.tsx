@@ -2,6 +2,8 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import type { FormEvent } from 'react'
 import { apiRequest } from './commerce'
 import type { CartData, Customer } from './commerce'
+import { translate } from './language'
+import type { Language } from './language'
 
 type AuthResponse = { data: Customer; token: string }
 type CheckoutResponse = { data: { id: string; total: number } }
@@ -78,6 +80,7 @@ type SavedAddress = {
 }
 
 type Props = {
+  language: Language
   token: string | null
   customer: Customer | null
   cart: CartData
@@ -102,6 +105,7 @@ const emptyCart: CartData = { items: [], total: 0 }
 const createIdempotencyKey = () => crypto.randomUUID()
 
 export function CommerceDialogs({
+  language,
   token,
   customer,
   cart,
@@ -120,6 +124,7 @@ export function CommerceDialogs({
   onUpdateQuantity,
   onRemoveItem,
 }: Props) {
+  const t = (text: string) => translate(language, text)
   const [authMode, setAuthMode] = useState<'login' | 'register'>('login')
   const [authBusy, setAuthBusy] = useState(false)
   const [authError, setAuthError] = useState('')
@@ -563,35 +568,35 @@ export function CommerceDialogs({
       {authOpen && (
         <div className="commerce-backdrop" role="presentation" onClick={onCloseAuth}>
           <section className="commerce-dialog auth-dialog" role="dialog" aria-modal="true" aria-labelledby="auth-title" onClick={(event) => event.stopPropagation()}>
-            <button className="commerce-close" type="button" onClick={onCloseAuth} aria-label="Đóng">×</button>
-            <span className="eyebrow">TÀI KHOẢN TECHSTORE</span>
-            <h2 id="auth-title">{authMode === 'login' ? 'Đăng nhập' : 'Tạo tài khoản'}</h2>
-            <p className="commerce-intro">Đăng nhập để quản lý giỏ hàng và theo dõi đơn hàng của bạn.</p>
+            <button className="commerce-close" type="button" onClick={onCloseAuth} aria-label={t('Đóng')}>×</button>
+            <span className="eyebrow">{language === 'vi' ? 'TÀI KHOẢN TECHSTORE' : 'TECHSTORE ACCOUNT'}</span>
+            <h2 id="auth-title">{authMode === 'login' ? t('Đăng nhập') : language === 'vi' ? 'Tạo tài khoản' : 'Create account'}</h2>
+            <p className="commerce-intro">{language === 'vi' ? 'Đăng nhập để quản lý giỏ hàng và theo dõi đơn hàng của bạn.' : 'Log in to manage your cart and track your orders.'}</p>
             <form className="commerce-form" onSubmit={submitAuth}>
               {authMode === 'register' && (
                 <>
-                  <label>Họ và tên<input name="name" required maxLength={200} autoComplete="name" /></label>
-                  <label>Tên đăng nhập<input name="username" required minLength={3} maxLength={50} autoComplete="username" /></label>
+                  <label>{language === 'vi' ? 'Họ và tên' : 'Full name'}<input name="name" required maxLength={200} autoComplete="name" /></label>
+                  <label>{language === 'vi' ? 'Tên đăng nhập' : 'Username'}<input name="username" required minLength={3} maxLength={50} autoComplete="username" /></label>
                   <label>Email<input name="email" type="email" required maxLength={255} autoComplete="email" /></label>
-                  <label>Số điện thoại<input name="phone" type="tel" required maxLength={20} autoComplete="tel" /></label>
+                  <label>{language === 'vi' ? 'Số điện thoại' : 'Phone number'}<input name="phone" type="tel" required maxLength={20} autoComplete="tel" /></label>
                 </>
               )}
               {authMode === 'login' && (
-                <label>Email hoặc tên đăng nhập<input name="identifier" required maxLength={255} autoComplete="username" /></label>
+                <label>{language === 'vi' ? 'Email hoặc tên đăng nhập' : 'Email or username'}<input name="identifier" required maxLength={255} autoComplete="username" /></label>
               )}
-              <label>Mật khẩu<input name="password" type="password" required minLength={authMode === 'register' ? 8 : undefined} maxLength={72} autoComplete={authMode === 'login' ? 'current-password' : 'new-password'} /></label>
+              <label>{language === 'vi' ? 'Mật khẩu' : 'Password'}<input name="password" type="password" required minLength={authMode === 'register' ? 8 : undefined} maxLength={72} autoComplete={authMode === 'login' ? 'current-password' : 'new-password'} /></label>
               {authMode === 'register' && (
-                <label>Nhập lại mật khẩu<input name="password_confirmation" type="password" required maxLength={72} autoComplete="new-password" /></label>
+                <label>{language === 'vi' ? 'Nhập lại mật khẩu' : 'Confirm password'}<input name="password_confirmation" type="password" required maxLength={72} autoComplete="new-password" /></label>
               )}
               {authError && <p className="commerce-error" role="alert">{authError}</p>}
               <button className="primary-button" type="submit" disabled={authBusy}>
-                {authBusy ? 'Đang xử lý…' : authMode === 'login' ? 'Đăng nhập' : 'Đăng ký'}
+                {authBusy ? (language === 'vi' ? 'Đang xử lý…' : 'Working…') : authMode === 'login' ? t('Đăng nhập') : language === 'vi' ? 'Đăng ký' : 'Sign up'}
               </button>
             </form>
             <p className="auth-switch">
-              {authMode === 'login' ? 'Chưa có tài khoản?' : 'Đã có tài khoản?'}
+              {authMode === 'login' ? (language === 'vi' ? 'Chưa có tài khoản?' : "Don't have an account?") : (language === 'vi' ? 'Đã có tài khoản?' : 'Already have an account?')}
               <button type="button" onClick={() => { setAuthMode(authMode === 'login' ? 'register' : 'login'); setAuthError('') }}>
-                {authMode === 'login' ? 'Đăng ký ngay' : 'Đăng nhập'}
+                {authMode === 'login' ? (language === 'vi' ? 'Đăng ký ngay' : 'Sign up now') : t('Đăng nhập')}
               </button>
             </p>
           </section>
@@ -602,13 +607,13 @@ export function CommerceDialogs({
         <div className="commerce-backdrop" role="presentation" onClick={onCloseCart}>
           <aside className="cart-drawer" role="dialog" aria-modal="true" aria-labelledby="cart-title" onClick={(event) => event.stopPropagation()}>
             <header className="cart-drawer-header">
-              <div><span className="eyebrow">TECHSTORE</span><h2 id="cart-title">Giỏ hàng <small>({cart.items.length})</small></h2></div>
-              <button className="commerce-close" type="button" onClick={onCloseCart} aria-label="Đóng giỏ hàng">×</button>
+              <div><span className="eyebrow">TECHSTORE</span><h2 id="cart-title">{t('Giỏ hàng')} <small>({cart.items.length})</small></h2></div>
+              <button className="commerce-close" type="button" onClick={onCloseCart} aria-label={`${t('Đóng')} ${t('Giỏ hàng')}`}>×</button>
             </header>
-            {customer && <button className="orders-open-button" type="button" onClick={() => void openOrders()}>Theo dõi đơn hàng của tôi →</button>}
-            {!customer && <p className="commerce-intro">Giỏ hàng này được lưu trên thiết bị. Đăng nhập khi thanh toán để đồng bộ và đặt hàng.</p>}
+            {customer && <button className="orders-open-button" type="button" onClick={() => void openOrders()}>{language === 'vi' ? 'Theo dõi đơn hàng của tôi' : 'Track my orders'} →</button>}
+            {!customer && <p className="commerce-intro">{language === 'vi' ? 'Giỏ hàng này được lưu trên thiết bị. Đăng nhập khi thanh toán để đồng bộ và đặt hàng.' : 'This cart is saved on this device. Log in at checkout to sync it and place your order.'}</p>}
             {cart.items.length === 0
-              ? <div className="cart-empty"><span aria-hidden="true">♧</span><h3>Giỏ hàng đang trống</h3><p>Chọn sản phẩm bạn yêu thích để bắt đầu đặt hàng.</p><button type="button" onClick={onCloseCart}>Tiếp tục khám phá</button></div>
+              ? <div className="cart-empty"><span aria-hidden="true">♧</span><h3>{language === 'vi' ? 'Giỏ hàng đang trống' : 'Your cart is empty'}</h3><p>{language === 'vi' ? 'Chọn sản phẩm bạn yêu thích để bắt đầu đặt hàng.' : 'Choose your favorite products to get started.'}</p><button type="button" onClick={onCloseCart}>{language === 'vi' ? 'Tiếp tục khám phá' : 'Continue exploring'}</button></div>
               : (
                 <>
                   <div className="cart-items">
@@ -621,19 +626,19 @@ export function CommerceDialogs({
                             <span>{item.quantity}</span>
                             <button type="button" aria-label={`Tăng số lượng ${item.name}`} disabled={item.quantity >= item.stock || item.quantity >= 20} onClick={() => updateQuantity(item.product_id, item.quantity + 1)}>+</button>
                           </div>
-                          <button className="remove-item" type="button" onClick={() => removeItem(item.product_id)}>Xóa</button>
+                          <button className="remove-item" type="button" onClick={() => removeItem(item.product_id)}>{t('Xóa')}</button>
                         </div>
                         <span className="cart-line-total">{money(item.line_total)}</span>
                       </article>
                     ))}
                   </div>
                   <div className="cart-summary">
-                    <div><span>Tạm tính</span><strong>{money(cart.total)}</strong></div>
-                    <div className="cart-final-total"><span>Tổng tiền hàng</span><strong>{money(cart.total)}</strong></div>
-                    <small>Chưa gồm phí giao hàng. Cửa hàng sẽ xác nhận phí và thời gian giao trước khi hoàn tất đơn.</small>
+                    <div><span>{language === 'vi' ? 'Tạm tính' : 'Subtotal'}</span><strong>{money(cart.total)}</strong></div>
+                    <div className="cart-final-total"><span>{language === 'vi' ? 'Tổng tiền hàng' : 'Order total'}</span><strong>{money(cart.total)}</strong></div>
+                    <small>{language === 'vi' ? 'Chưa gồm phí giao hàng. Cửa hàng sẽ xác nhận phí và thời gian giao trước khi hoàn tất đơn.' : 'Excludes delivery fees. The store will confirm delivery fees and timing before completing the order.'}</small>
                     {checkoutError && <p className="commerce-error" role="alert">{checkoutError}</p>}
                     <button className="primary-button" type="button" onClick={() => !token || guestCartNeedsMerge ? onRequireAuthCheckout() : void openCheckout()}>
-                      Tiến hành đặt hàng
+                      {language === 'vi' ? 'Tiến hành đặt hàng' : 'Proceed to checkout'}
                     </button>
                   </div>
                 </>
@@ -645,125 +650,125 @@ export function CommerceDialogs({
       {(ordersOpen || ordersRequestId > closedOrdersRequestId) && (
         <div className="commerce-backdrop" role="presentation" onClick={closeOrders}>
           <section className="commerce-dialog orders-dialog" role="dialog" aria-modal="true" aria-labelledby="orders-title" onClick={(event) => event.stopPropagation()}>
-            <button className="commerce-close" type="button" onClick={closeOrders} aria-label="Đóng">×</button>
-            <span className="eyebrow">TÀI KHOẢN TECHSTORE</span>
-            <h2 id="orders-title">{selectedOrder ? `Đơn hàng ${selectedOrder.order.ma_dh}` : 'Đơn hàng của tôi'}</h2>
-            {!selectedOrder && <nav className="customer-account-tabs" aria-label="Thông tin tài khoản">
-              <button type="button" className={accountPanel === 'orders' ? 'active' : ''} onClick={() => { setAccountPanel('orders'); setPromotionError('') }}>Lịch sử mua hàng</button>
-              <button type="button" className={accountPanel === 'vouchers' ? 'active' : ''} onClick={() => { setAccountPanel('vouchers'); void loadPromotions() }}>Mã giảm giá</button>
-              <button type="button" className={accountPanel === 'education' ? 'active' : ''} onClick={() => { setAccountPanel('education'); void loadPromotions() }}>Ưu đãi HSSV–GV</button>
+            <button className="commerce-close" type="button" onClick={closeOrders} aria-label={t('Đóng')}>×</button>
+            <span className="eyebrow">{language === 'vi' ? 'TÀI KHOẢN TECHSTORE' : 'TECHSTORE ACCOUNT'}</span>
+            <h2 id="orders-title">{selectedOrder ? `${language === 'vi' ? 'Đơn hàng' : 'Order'} ${selectedOrder.order.ma_dh}` : t('Đơn hàng của tôi')}</h2>
+            {!selectedOrder && <nav className="customer-account-tabs" aria-label={t('Thông tin tài khoản')}>
+              <button type="button" className={accountPanel === 'orders' ? 'active' : ''} onClick={() => { setAccountPanel('orders'); setPromotionError('') }}>{t('Lịch sử mua hàng')}</button>
+              <button type="button" className={accountPanel === 'vouchers' ? 'active' : ''} onClick={() => { setAccountPanel('vouchers'); void loadPromotions() }}>{t('Mã giảm giá')}</button>
+              <button type="button" className={accountPanel === 'education' ? 'active' : ''} onClick={() => { setAccountPanel('education'); void loadPromotions() }}>{t('Ưu đãi HSSV–GV')}</button>
             </nav>}
             {ordersError && <p className="commerce-error" role="alert">{ordersError}</p>}
-            {accountPanel === 'orders' && (ordersLoading || (ordersRequestId > closedOrdersRequestId && ordersLoadedRequestId < ordersRequestId)) && <p className="detail-status">Đang tải đơn hàng…</p>}
+            {accountPanel === 'orders' && (ordersLoading || (ordersRequestId > closedOrdersRequestId && ordersLoadedRequestId < ordersRequestId)) && <p className="detail-status">{t('Đang tải đơn hàng…')}</p>}
             {accountPanel === 'orders' && !selectedOrder && notifications.length > 0 && (
-              <section className="customer-notifications" aria-label="Thông báo tài khoản">
-                <header><h3>Thông báo của bạn ({notifications.filter((notification) => !notification.read_at).length} chưa đọc)</h3>{notifications.some((notification) => !notification.read_at) && <button type="button" onClick={() => void markAllNotificationsRead()}>Đánh dấu đã đọc hết</button>}</header>
+              <section className="customer-notifications" aria-label={t('Thông báo tài khoản')}>
+                <header><h3>{language === 'vi' ? `Thông báo của bạn (${notifications.filter((notification) => !notification.read_at).length} chưa đọc)` : `Your notifications (${notifications.filter((notification) => !notification.read_at).length} unread)`}</h3>{notifications.some((notification) => !notification.read_at) && <button type="button" onClick={() => void markAllNotificationsRead()}>{t('Đánh dấu đã đọc hết')}</button>}</header>
                 {notifications.map((notification) => (
                   <button className={`customer-notification${notification.read_at ? '' : ' unread'}`} type="button" key={notification.id} onClick={() => void markNotificationRead(notification)}>
-                    <strong>{notification.tieu_de}</strong><span>{notification.noi_dung}</span><time>{new Date(notification.created_at).toLocaleString('vi-VN')}</time>
+                    <strong>{notification.tieu_de}</strong><span>{notification.noi_dung}</span><time>{new Date(notification.created_at).toLocaleString(language === 'vi' ? 'vi-VN' : 'en-US')}</time>
                   </button>
                 ))}
               </section>
             )}
-            {accountPanel === 'orders' && !ordersLoading && !selectedOrder && orders.length === 0 && !ordersError && <p className="commerce-intro">Bạn chưa có đơn hàng nào.</p>}
+            {accountPanel === 'orders' && !ordersLoading && !selectedOrder && orders.length === 0 && !ordersError && <p className="commerce-intro">{t('Bạn chưa có đơn hàng nào.')}</p>}
             {accountPanel === 'orders' && !selectedOrder && orders.map((order) => (
               <article className="order-list-item" key={order.ma_dh}>
-                <div><strong>{order.ma_dh}</strong><span>{new Date(order.ngay_dat).toLocaleDateString('vi-VN')}</span></div>
+                <div><strong>{order.ma_dh}</strong><span>{new Date(order.ngay_dat).toLocaleDateString(language === 'vi' ? 'vi-VN' : 'en-US')}</span></div>
                 <div><span className={`order-status status-${order.trang_thai === 'Da Giao' ? 'done' : order.trang_thai === 'huy' ? 'cancelled' : order.trang_thai === 'Dang Giao' ? 'shipping' : 'pending'}`}>{order.trang_thai}</span><strong>{money(Number(order.tong_tien))}</strong>{order.ma_van_don && <small>{order.don_vi_van_chuyen} · {order.ma_van_don}</small>}</div>
-                <button type="button" onClick={() => void viewOrder(order.ma_dh)}>Xem chi tiết</button>
+                <button type="button" onClick={() => void viewOrder(order.ma_dh)}>{t('Xem chi tiết')}</button>
               </article>
             ))}
             {accountPanel === 'orders' && selectedOrder && (
               <div className="order-detail-view">
-                <button className="order-back-button" type="button" onClick={() => setSelectedOrder(null)}>← Tất cả đơn hàng</button>
+                <button className="order-back-button" type="button" onClick={() => setSelectedOrder(null)}>← {t('Tất cả đơn hàng')}</button>
                 <div className="order-facts">
-                  <p>Trạng thái: <strong>{selectedOrder.order.trang_thai}</strong></p>
-                  <p>Ngày đặt: <strong>{new Date(selectedOrder.order.ngay_dat).toLocaleDateString('vi-VN')}</strong></p>
-                  <p>Người nhận: <strong>{selectedOrder.order.ten_nguoi_nhan || '—'}</strong></p>
-                  <p>Điện thoại: <strong>{selectedOrder.order.dien_thoai_nguoi_nhan || '—'}</strong></p>
-                  <p>Địa chỉ: <strong>{selectedOrder.order.dia_chi_giao_hang || '—'}</strong></p>
-                  <p>Thanh toán: <strong>{selectedOrder.payment?.phuong_thuc === 'Chuyen khoan' ? 'Chuyển khoản Agribank QR' : selectedOrder.payment?.phuong_thuc === 'MoMo' ? 'MoMo QR' : 'Thanh toán khi nhận hàng'} · {selectedOrder.payment?.trang_thai || 'Chưa rõ'}</strong></p>
-                  <p>Vận chuyển: <strong>{selectedOrder.order.don_vi_van_chuyen ? `${selectedOrder.order.don_vi_van_chuyen} · ${selectedOrder.order.ma_van_don}` : 'Cửa hàng sẽ cập nhật sau khi bàn giao đơn'}</strong></p>
-                  {selectedOrder.order.ngay_giao_du_kien && <p>Ngày giao dự kiến: <strong>{new Date(`${selectedOrder.order.ngay_giao_du_kien}T00:00:00`).toLocaleDateString('vi-VN')}</strong></p>}
+                  <p>{t('Trạng thái:')} <strong>{selectedOrder.order.trang_thai}</strong></p>
+                  <p>{t('Ngày đặt:')} <strong>{new Date(selectedOrder.order.ngay_dat).toLocaleDateString(language === 'vi' ? 'vi-VN' : 'en-US')}</strong></p>
+                  <p>{t('Người nhận:')} <strong>{selectedOrder.order.ten_nguoi_nhan || '—'}</strong></p>
+                  <p>{t('Điện thoại:')} <strong>{selectedOrder.order.dien_thoai_nguoi_nhan || '—'}</strong></p>
+                  <p>{t('Địa chỉ:')} <strong>{selectedOrder.order.dia_chi_giao_hang || '—'}</strong></p>
+                  <p>{t('Thanh toán:')} <strong>{selectedOrder.payment?.phuong_thuc === 'Chuyen khoan' ? t('Chuyển khoản Agribank QR') : selectedOrder.payment?.phuong_thuc === 'MoMo' ? 'MoMo QR' : t('Thanh toán khi nhận hàng')} · {selectedOrder.payment?.trang_thai || t('Chưa rõ')}</strong></p>
+                  <p>{t('Vận chuyển:')} <strong>{selectedOrder.order.don_vi_van_chuyen ? `${selectedOrder.order.don_vi_van_chuyen} · ${selectedOrder.order.ma_van_don}` : t('Cửa hàng sẽ cập nhật sau khi bàn giao đơn')}</strong></p>
+                  {selectedOrder.order.ngay_giao_du_kien && <p>{t('Ngày giao dự kiến:')} <strong>{new Date(`${selectedOrder.order.ngay_giao_du_kien}T00:00:00`).toLocaleDateString(language === 'vi' ? 'vi-VN' : 'en-US')}</strong></p>}
                 </div>
-                <h3>Sản phẩm</h3>
+                <h3>{t('Sản phẩm')}</h3>
                 {selectedOrder.items.map((item) => <div className="order-product-line" key={item.ma_sp}><span>{item.ten_sp} × {item.so_luong}</span><strong>{money(Number(item.don_gia) * Number(item.so_luong))}</strong></div>)}
-                <div className="order-product-line order-total"><span>Tổng cộng</span><strong>{money(Number(selectedOrder.order.tong_tien))}</strong></div>
-                <h3>Lịch sử trạng thái</h3>
+                <div className="order-product-line order-total"><span>{t('Tổng cộng')}</span><strong>{money(Number(selectedOrder.order.tong_tien))}</strong></div>
+                <h3>{t('Lịch sử trạng thái')}</h3>
                 <ol className="order-history">
-                  {selectedOrder.history.map((entry, index) => <li key={`${entry.trang_thai}-${index}`}><strong>{entry.trang_thai}</strong><span>{entry.ghi_chu}</span><time>{new Date(entry.thoi_gian_tao).toLocaleString('vi-VN')}</time></li>)}
+                  {selectedOrder.history.map((entry, index) => <li key={`${entry.trang_thai}-${index}`}><strong>{entry.trang_thai}</strong><span>{entry.ghi_chu}</span><time>{new Date(entry.thoi_gian_tao).toLocaleString(language === 'vi' ? 'vi-VN' : 'en-US')}</time></li>)}
                 </ol>
-                {selectedOrder.order.trang_thai === 'Cho xac nhan' && <button className="cancel-order-button" type="button" onClick={() => void cancelOrder(selectedOrder.order.ma_dh)}>Hủy đơn hàng</button>}
-                {selectedReturn && <section className="return-request-status"><h3>Yêu cầu đổi/trả</h3><p>{selectedReturn.loai_yeu_cau === 'return' ? 'Đổi/trả' : 'Đổi sản phẩm'} · {returnStatusLabels[selectedReturn.trang_thai] ?? selectedReturn.trang_thai}</p>{selectedReturn.ghi_chu_nhan_vien && <p>Phản hồi cửa hàng: {selectedReturn.ghi_chu_nhan_vien}</p>}</section>}
+                {selectedOrder.order.trang_thai === 'Cho xac nhan' && <button className="cancel-order-button" type="button" onClick={() => void cancelOrder(selectedOrder.order.ma_dh)}>{t('Hủy đơn hàng')}</button>}
+                {selectedReturn && <section className="return-request-status"><h3>{t('Yêu cầu đổi/trả')}</h3><p>{selectedReturn.loai_yeu_cau === 'return' ? t('Đổi / trả') : t('Đổi sản phẩm')} · {returnStatusLabels[selectedReturn.trang_thai] ?? selectedReturn.trang_thai}</p>{selectedReturn.ghi_chu_nhan_vien && <p>{t('Phản hồi cửa hàng:')} {selectedReturn.ghi_chu_nhan_vien}</p>}</section>}
                 {!selectedReturn && canRequestReturn && <form className="commerce-form return-request-form" onSubmit={(event) => void submitReturnRequest(event)}>
-                  <h3>Gửi yêu cầu trong 7 ngày kể từ khi nhận hàng</h3>
-                  <p className="commerce-intro">Cửa hàng sẽ xem xét yêu cầu và phản hồi trong tài khoản; việc gửi yêu cầu chưa đồng nghĩa với hoàn tiền tự động.</p>
-                  <label>Loại yêu cầu<select value={returnType} onChange={(event) => setReturnType(event.target.value as 'return' | 'exchange')}><option value="return">Đổi / trả</option><option value="exchange">Đổi sản phẩm</option></select></label>
-                  <label>Lý do<select value={returnReason} onChange={(event) => setReturnReason(event.target.value)}><option value="damaged">Sản phẩm hư hỏng</option><option value="wrong_item">Giao sai sản phẩm</option><option value="defective">Lỗi kỹ thuật</option><option value="changed_mind">Đổi ý</option><option value="other">Lý do khác</option></select></label>
-                  <label>Mô tả thêm<textarea maxLength={2000} value={returnDescription} onChange={(event) => setReturnDescription(event.target.value)} /></label>
-                  <button className="primary-button" type="submit" disabled={returnBusy}>{returnBusy ? 'Đang gửi…' : 'Gửi yêu cầu'}</button>
+                  <h3>{t('Gửi yêu cầu trong 7 ngày kể từ khi nhận hàng')}</h3>
+                  <p className="commerce-intro">{t('Cửa hàng sẽ xem xét yêu cầu và phản hồi trong tài khoản; việc gửi yêu cầu chưa đồng nghĩa với hoàn tiền tự động.')}</p>
+                  <label>{t('Loại yêu cầu')}<select value={returnType} onChange={(event) => setReturnType(event.target.value as 'return' | 'exchange')}><option value="return">{t('Đổi / trả')}</option><option value="exchange">{t('Đổi sản phẩm')}</option></select></label>
+                  <label>{t('Lý do')}<select value={returnReason} onChange={(event) => setReturnReason(event.target.value)}><option value="damaged">{t('Sản phẩm hư hỏng')}</option><option value="wrong_item">{t('Giao sai sản phẩm')}</option><option value="defective">{t('Lỗi kỹ thuật')}</option><option value="changed_mind">{t('Đổi ý')}</option><option value="other">{t('Lý do khác')}</option></select></label>
+                  <label>{t('Mô tả thêm')}<textarea maxLength={2000} value={returnDescription} onChange={(event) => setReturnDescription(event.target.value)} /></label>
+                  <button className="primary-button" type="submit" disabled={returnBusy}>{returnBusy ? t('Đang gửi…') : t('Gửi yêu cầu')}</button>
                 </form>}
               </div>
             )}
             {accountPanel === 'vouchers' && <section className="customer-promotion-panel">
-              <h3>Mã giảm giá của bạn</h3>
-              <p className="commerce-intro">Thu thập mã còn hiệu lực tại đây, sau đó chọn mã khi thanh toán. Mỗi mã chỉ dùng một lần cho mỗi tài khoản.</p>
+              <h3>{t('Mã giảm giá của bạn')}</h3>
+              <p className="commerce-intro">{t('Thu thập mã còn hiệu lực tại đây, sau đó chọn mã khi thanh toán. Mỗi mã chỉ dùng một lần cho mỗi tài khoản.')}</p>
               {promotionError && <p className="commerce-error" role="alert">{promotionError}</p>}
               {promotionMessage && <p className="promotion-message" role="status">{promotionMessage}</p>}
-              {promotionBusy && customerVouchers.length === 0 && <p className="detail-status">Đang tải mã giảm giá…</p>}
-              {!promotionBusy && customerVouchers.length === 0 && <p className="commerce-intro">Hiện chưa có mã giảm giá khả dụng.</p>}
+              {promotionBusy && customerVouchers.length === 0 && <p className="detail-status">{t('Đang tải mã giảm giá…')}</p>}
+              {!promotionBusy && customerVouchers.length === 0 && <p className="commerce-intro">{t('Hiện chưa có mã giảm giá khả dụng.')}</p>}
               {customerVouchers.map((voucher) => (
                 <article className="customer-voucher-card" key={voucher.code}>
                   <div>
                     <strong>{voucher.code}</strong>
-                    <span>{voucher.discount_type === 'percent' ? `Giảm ${voucher.discount_value}%` : `Giảm ${money(voucher.discount_value)}`}</span>
-                    <small>Đơn tối thiểu {money(voucher.minimum_order_value)}{voucher.maximum_discount ? ` · tối đa ${money(voucher.maximum_discount)}` : ''}</small>
-                    {voucher.expires_at && <small>Hạn dùng: {new Date(voucher.expires_at).toLocaleDateString('vi-VN')}</small>}
+                    <span>{language === 'vi' ? 'Giảm' : 'Discount'} {voucher.discount_type === 'percent' ? `${voucher.discount_value}%` : money(voucher.discount_value)}</span>
+                    <small>{language === 'vi' ? 'Đơn tối thiểu' : 'Minimum order'} {money(voucher.minimum_order_value)}{voucher.maximum_discount ? ` · ${language === 'vi' ? 'tối đa' : 'up to'} ${money(voucher.maximum_discount)}` : ''}</small>
+                    {voucher.expires_at && <small>{language === 'vi' ? 'Hạn dùng:' : 'Expires:'} {new Date(voucher.expires_at).toLocaleDateString(language === 'vi' ? 'vi-VN' : 'en-US')}</small>}
                   </div>
                   <button type="button" disabled={voucher.claimed || promotionBusy} onClick={() => void claimVoucher(voucher.code)}>
-                    {voucher.claimed ? 'Đã thu thập' : promotionBusy ? 'Đang xử lý…' : 'Thu thập'}
+                    {voucher.claimed ? t('Đã thu thập') : promotionBusy ? (language === 'vi' ? 'Đang xử lý…' : 'Processing…') : t('Thu thập')}
                   </button>
                 </article>
               ))}
             </section>}
             {accountPanel === 'education' && <section className="customer-promotion-panel">
-              <h3>Ưu đãi học sinh, sinh viên và nhà giáo</h3>
-              <p className="commerce-intro">Xác minh email trường và gửi minh chứng để nhân viên duyệt đúng đối tượng. Ưu đãi tối đa 2.000.000₫ mỗi đơn; không cộng dồn với mã giảm giá.</p>
+              <h3>{t('Ưu đãi học sinh, sinh viên và nhà giáo')}</h3>
+              <p className="commerce-intro">{t('Xác minh email trường và gửi minh chứng để nhân viên duyệt đúng đối tượng. Ưu đãi tối đa 2.000.000₫ mỗi đơn; không cộng dồn với mã giảm giá.')}</p>
               {promotionError && <p className="commerce-error" role="alert">{promotionError}</p>}
               {promotionMessage && <p className="promotion-message" role="status">{promotionMessage}</p>}
               {educationBenefit?.status === 'approved' && educationBenefit.verified ? (
                 <div className="education-benefit-confirmed">
                   <strong>Đã xác minh: {educationBenefit.audience} · giảm {educationBenefit.discount_percent}%</strong>
                   <span>{educationBenefit.email}</span>
-                  <p>Ưu đãi được tự động xét khi đặt hàng.</p>
+                  <p>{t('Ưu đãi được tự động xét khi đặt hàng.')}</p>
                 </div>
               ) : (
                 <>
                   {educationBenefit?.status === 'pending' && (
                     <div className="education-benefit-confirmed">
-                      <strong>Hồ sơ đang chờ nhân viên duyệt</strong>
+                      <strong>{t('Hồ sơ đang chờ nhân viên duyệt')}</strong>
                       <span>{educationBenefit.audience} · {educationBenefit.email}</span>
-                      <p>Email đã xác minh. Ưu đãi chỉ được áp dụng sau khi hồ sơ và minh chứng được duyệt.</p>
+                      <p>{t('Email đã xác minh. Ưu đãi chỉ được áp dụng sau khi hồ sơ và minh chứng được duyệt.')}</p>
                     </div>
                   )}
                   {educationBenefit?.status === 'rejected' && (
                     <div className="education-benefit-confirmed">
-                      <strong>Hồ sơ chưa được duyệt</strong>
-                      <span>{educationBenefit.review_note || 'Bạn có thể gửi lại hồ sơ với minh chứng phù hợp.'}</span>
+                      <strong>{t('Hồ sơ chưa được duyệt')}</strong>
+                      <span>{educationBenefit.review_note || t('Bạn có thể gửi lại hồ sơ với minh chứng phù hợp.')}</span>
                     </div>
                   )}
                   {educationBenefit?.status !== 'pending' && <form className="commerce-form education-verification-form" onSubmit={(event) => void requestEducationCode(event)}>
-                    <label>Đối tượng<select value={educationAudience} onChange={(event) => setEducationAudience(event.target.value)}>
+                    <label>{t('Đối tượng')}<select value={educationAudience} onChange={(event) => setEducationAudience(event.target.value)}>
                       {educationLevels.map(([value, label]) => <option key={value} value={value}>{label}</option>)}
                     </select></label>
-                    <label>Email trường<input type="email" required maxLength={255} value={educationEmail} onChange={(event) => setEducationEmail(event.target.value)} placeholder="ten@truong.edu.vn" /></label>
-                    <label>Minh chứng (JPG, PNG hoặc PDF, tối đa 5 MB)<input key={educationEvidenceInputKey} type="file" accept=".jpg,.jpeg,.png,.pdf" required onChange={(event) => setEducationEvidence(event.target.files?.[0] ?? null)} /></label>
-                    <p>Chỉ quản trị viên được xem tệp để xác minh đối tượng ưu đãi.</p>
-                    <button className="primary-button" type="submit" disabled={promotionBusy}>{promotionBusy ? 'Đang gửi…' : 'Gửi mã xác minh'}</button>
+                    <label>{t('Email trường')}<input type="email" required maxLength={255} value={educationEmail} onChange={(event) => setEducationEmail(event.target.value)} placeholder={language === 'vi' ? 'ten@truong.edu.vn' : 'name@school.edu'} /></label>
+                    <label>{t('Minh chứng (JPG, PNG hoặc PDF, tối đa 5 MB)')}<input key={educationEvidenceInputKey} type="file" accept=".jpg,.jpeg,.png,.pdf" required onChange={(event) => setEducationEvidence(event.target.files?.[0] ?? null)} /></label>
+                    <p>{t('Chỉ quản trị viên được xem tệp để xác minh đối tượng ưu đãi.')}</p>
+                    <button className="primary-button" type="submit" disabled={promotionBusy}>{promotionBusy ? t('Đang gửi…') : t('Gửi mã xác minh')}</button>
                   </form>}
                   {educationBenefit?.status !== 'pending' && educationCodeSent && <form className="commerce-form education-verification-form" onSubmit={(event) => void verifyEducationCode(event)}>
-                    <label>Mã OTP (6 chữ số)<input inputMode="numeric" pattern="[0-9]{6}" maxLength={6} required value={educationCode} onChange={(event) => setEducationCode(event.target.value)} /></label>
-                    <button className="primary-button" type="submit" disabled={promotionBusy}>{promotionBusy ? 'Đang xác minh…' : 'Xác minh email'}</button>
+                    <label>{language === 'vi' ? 'Mã OTP (6 chữ số)' : 'OTP code (6 digits)'}<input inputMode="numeric" pattern="[0-9]{6}" maxLength={6} required value={educationCode} onChange={(event) => setEducationCode(event.target.value)} /></label>
+                    <button className="primary-button" type="submit" disabled={promotionBusy}>{promotionBusy ? t('Đang xác minh…') : t('Xác minh email')}</button>
                   </form>}
                 </>
               )}
@@ -775,30 +780,30 @@ export function CommerceDialogs({
       {(checkoutOpen || resumeCheckout) && (
         <div className="commerce-backdrop" role="presentation" onClick={() => { setCheckoutOpen(false); setPlacedOrder(null) }}>
           <section className="commerce-dialog checkout-dialog" role="dialog" aria-modal="true" aria-labelledby="checkout-title" onClick={(event) => event.stopPropagation()}>
-            <button className="commerce-close" type="button" onClick={() => { setCheckoutOpen(false); setPlacedOrder(null) }} aria-label="Đóng">×</button>
+            <button className="commerce-close" type="button" onClick={() => { setCheckoutOpen(false); setPlacedOrder(null) }} aria-label={t('Đóng')}>×</button>
             {!placedOrder ? (
               <>
-                <span className="eyebrow">HOÀN TẤT ĐẶT HÀNG</span>
-                <h2 id="checkout-title">Thông tin giao hàng</h2>
-                <ol className="checkout-steps" aria-label="Các bước đặt hàng">
-                  <li><span aria-hidden="true">✓</span> Giỏ hàng</li>
-                  <li aria-current="step"><span aria-hidden="true">2</span> Thông tin giao hàng</li>
-                  <li><span aria-hidden="true">3</span> Chọn thanh toán</li>
+                <span className="eyebrow">{t('HOÀN TẤT ĐẶT HÀNG')}</span>
+                <h2 id="checkout-title">{t('Thông tin giao hàng')}</h2>
+                <ol className="checkout-steps" aria-label={t('Các bước đặt hàng')}>
+                  <li><span aria-hidden="true">✓</span> {t('Giỏ hàng')}</li>
+                  <li aria-current="step"><span aria-hidden="true">2</span> {t('Thông tin giao hàng')}</li>
+                  <li><span aria-hidden="true">3</span> {t('Chọn thanh toán')}</li>
                 </ol>
-                <section className="checkout-summary" aria-label="Tổng kết thanh toán">
-                  <div><span>Tạm tính sản phẩm</span><strong>{money(cart.total)}</strong></div>
-                  {bestDiscountPreview > 0 && <div><span>{voucherDiscountPreview > educationDiscountPreview ? `Ưu đãi ${appliedVoucher?.code}` : 'Ưu đãi HSSV–GV'}</span><strong>−{money(bestDiscountPreview)}</strong></div>}
-                  <div className="checkout-grand-total"><span>Tổng tiền hàng · chưa gồm phí giao</span><strong>{money(cart.total - bestDiscountPreview)}</strong></div>
-                  <p>Chưa bao gồm phí giao hàng. Cửa hàng sẽ xác nhận phí và thời gian giao trước khi hoàn tất.</p>
+                <section className="checkout-summary" aria-label={t('Tổng kết thanh toán')}>
+                  <div><span>{t('Tạm tính sản phẩm')}</span><strong>{money(cart.total)}</strong></div>
+                  {bestDiscountPreview > 0 && <div><span>{voucherDiscountPreview > educationDiscountPreview ? `${language === 'vi' ? 'Ưu đãi' : 'Offer'} ${appliedVoucher?.code}` : t('Ưu đãi HSSV–GV')}</span><strong>−{money(bestDiscountPreview)}</strong></div>}
+                  <div className="checkout-grand-total"><span>{t('Tổng tiền hàng · chưa gồm phí giao')}</span><strong>{money(cart.total - bestDiscountPreview)}</strong></div>
+                  <p>{t('Chưa bao gồm phí giao hàng. Cửa hàng sẽ xác nhận phí và thời gian giao trước khi hoàn tất.')}</p>
                 </section>
                 <details className="checkout-items">
-                  <summary>Xem {cart.items.length} sản phẩm trong đơn</summary>
+                  <summary>{language === 'vi' ? 'Xem' : 'View'} {cart.items.length} {t('sản phẩm trong đơn')}</summary>
                   {cart.items.map((item) => <div key={item.product_id}><span>{item.name} × {item.quantity}</span><strong>{money(item.line_total)}</strong></div>)}
                 </details>
-                <p className="shipping-disclaimer">Cửa hàng cần xác nhận phí giao hàng, thời gian nhận dự kiến và tình trạng đơn sau khi tiếp nhận; hiện chưa có bảng phí hoặc kết nối hãng vận chuyển.</p>
+                <p className="shipping-disclaimer">{t('Cửa hàng cần xác nhận phí giao hàng, thời gian nhận dự kiến và tình trạng đơn sau khi tiếp nhận; hiện chưa có bảng phí hoặc kết nối hãng vận chuyển.')}</p>
                 <form className="commerce-form checkout-form" onSubmit={submitCheckout}>
                   {savedAddresses.length > 0 && (
-                    <label className="checkout-wide">Địa chỉ đã lưu
+                    <label className="checkout-wide">{t('Địa chỉ đã lưu')}
                       <select value="" onChange={(event) => {
                         const address = savedAddresses.find((saved) => saved.loai_dia_chi === event.target.value)
                         if (address) {
@@ -814,68 +819,68 @@ export function CommerceDialogs({
                           })
                         }
                       }}>
-                        <option value="">Chọn để điền thông tin</option>
+                        <option value="">{t('Chọn để điền thông tin')}</option>
                         {savedAddresses.map((address) => <option key={address.loai_dia_chi} value={address.loai_dia_chi}>{address.loai_dia_chi} · {address.chi_tiet_dia_chi}</option>)}
                       </select>
                     </label>
                   )}
-                  <label>Người nhận<input required maxLength={200} autoComplete="name" value={checkout.recipient_name} onChange={(event) => setCheckout({ ...checkout, recipient_name: event.target.value })} /></label>
-                  <label>Số điện thoại<input required type="tel" maxLength={20} autoComplete="tel" value={checkout.phone} onChange={(event) => setCheckout({ ...checkout, phone: event.target.value })} /></label>
-                  <label className="checkout-wide">Địa chỉ<input required maxLength={255} autoComplete="street-address" value={checkout.address} onChange={(event) => setCheckout({ ...checkout, address: event.target.value })} /></label>
-                  <label>Phường / xã<input maxLength={100} value={checkout.ward} onChange={(event) => setCheckout({ ...checkout, ward: event.target.value })} /></label>
-                  <label>Quận / huyện<input required maxLength={100} value={checkout.district} onChange={(event) => setCheckout({ ...checkout, district: event.target.value })} /></label>
-                  <label className="checkout-wide">Tỉnh / thành phố<input required maxLength={100} autoComplete="address-level1" value={checkout.city} onChange={(event) => setCheckout({ ...checkout, city: event.target.value })} /></label>
+                  <label>{t('Người nhận')}<input required maxLength={200} autoComplete="name" value={checkout.recipient_name} onChange={(event) => setCheckout({ ...checkout, recipient_name: event.target.value })} /></label>
+                  <label>{t('Số điện thoại')}<input required type="tel" maxLength={20} autoComplete="tel" value={checkout.phone} onChange={(event) => setCheckout({ ...checkout, phone: event.target.value })} /></label>
+                  <label className="checkout-wide">{t('Địa chỉ')}<input required maxLength={255} autoComplete="street-address" value={checkout.address} onChange={(event) => setCheckout({ ...checkout, address: event.target.value })} /></label>
+                  <label>{t('Phường / xã')}<input maxLength={100} value={checkout.ward} onChange={(event) => setCheckout({ ...checkout, ward: event.target.value })} /></label>
+                  <label>{t('Quận / huyện')}<input required maxLength={100} value={checkout.district} onChange={(event) => setCheckout({ ...checkout, district: event.target.value })} /></label>
+                  <label className="checkout-wide">{t('Tỉnh / thành phố')}<input required maxLength={100} autoComplete="address-level1" value={checkout.city} onChange={(event) => setCheckout({ ...checkout, city: event.target.value })} /></label>
                   <div className="checkout-wide address-save-row">
-                    <label>Tên địa chỉ<input maxLength={20} value={addressLabel} onChange={(event) => setAddressLabel(event.target.value)} /></label>
-                    <button type="button" onClick={() => void saveAddress()}>Lưu địa chỉ</button>
-                    {savedAddresses.some((address) => address.loai_dia_chi === addressLabel) && <button type="button" onClick={() => void deleteAddress(addressLabel)}>Xóa địa chỉ đã lưu</button>}
+                    <label>{t('Tên địa chỉ')}<input maxLength={20} value={addressLabel} onChange={(event) => setAddressLabel(event.target.value)} /></label>
+                    <button type="button" onClick={() => void saveAddress()}>{t('Lưu địa chỉ')}</button>
+                    {savedAddresses.some((address) => address.loai_dia_chi === addressLabel) && <button type="button" onClick={() => void deleteAddress(addressLabel)}>{t('Xóa địa chỉ đã lưu')}</button>}
                     {addressMessage && <span role="status">{addressMessage}</span>}
                   </div>
                   <div className="checkout-wide voucher-row">
-                    <label>Mã đã thu thập<select value={voucherCode} onChange={(event) => { setVoucherCode(event.target.value); setAppliedVoucher(null); setVoucherError('') }}>
-                      <option value="">Không chọn mã</option>
+                    <label>{t('Mã đã thu thập')}<select value={voucherCode} onChange={(event) => { setVoucherCode(event.target.value); setAppliedVoucher(null); setVoucherError('') }}>
+                      <option value="">{t('Không chọn mã')}</option>
                       {customerVouchers.filter((voucher) => voucher.claimed).map((voucher) => <option key={voucher.code} value={voucher.code}>{voucher.code} · {voucher.discount_type === 'percent' ? `${voucher.discount_value}%` : money(voucher.discount_value)}</option>)}
                     </select></label>
-                    <label>Hoặc nhập mã<input value={voucherCode} onChange={(event) => { setVoucherCode(event.target.value); setAppliedVoucher(null); setVoucherError('') }} /></label>
-                    <button type="button" disabled={voucherBusy || !voucherCode.trim()} onClick={() => void applyVoucher()}>{voucherBusy ? 'Đang kiểm tra…' : appliedVoucher ? 'Đã áp dụng' : 'Áp dụng mã'}</button>
+                    <label>{t('Hoặc nhập mã')}<input value={voucherCode} onChange={(event) => { setVoucherCode(event.target.value); setAppliedVoucher(null); setVoucherError('') }} /></label>
+                    <button type="button" disabled={voucherBusy || !voucherCode.trim()} onClick={() => void applyVoucher()}>{voucherBusy ? t('Đang kiểm tra…') : appliedVoucher ? t('Đã áp dụng') : t('Áp dụng mã')}</button>
                     {voucherError && <span className="commerce-error" role="alert">{voucherError}</span>}
                   </div>
                   <fieldset className="payment-options checkout-wide">
-                    <legend>Phương thức thanh toán</legend>
-                    <label><input type="radio" name="payment_method" value="transfer" checked={checkout.payment_method === 'transfer'} onChange={() => setCheckout({ ...checkout, payment_method: 'transfer' })} /> Chuyển khoản Agribank qua QR</label>
-                    <label><input type="radio" name="payment_method" value="momo" checked={checkout.payment_method === 'momo'} onChange={() => setCheckout({ ...checkout, payment_method: 'momo' })} /> MoMo qua mã QR</label>
-                    <label><input type="radio" name="payment_method" value="cash" checked={checkout.payment_method === 'cash'} onChange={() => setCheckout({ ...checkout, payment_method: 'cash' })} /> Thanh toán khi nhận hàng</label>
+                    <legend>{t('Phương thức thanh toán')}</legend>
+                    <label><input type="radio" name="payment_method" value="transfer" checked={checkout.payment_method === 'transfer'} onChange={() => setCheckout({ ...checkout, payment_method: 'transfer' })} /> {t('Chuyển khoản Agribank qua QR')}</label>
+                    <label><input type="radio" name="payment_method" value="momo" checked={checkout.payment_method === 'momo'} onChange={() => setCheckout({ ...checkout, payment_method: 'momo' })} /> {t('MoMo qua mã QR')}</label>
+                    <label><input type="radio" name="payment_method" value="cash" checked={checkout.payment_method === 'cash'} onChange={() => setCheckout({ ...checkout, payment_method: 'cash' })} /> {t('Thanh toán khi nhận hàng')}</label>
                   </fieldset>
                   {checkout.payment_method === 'momo' || checkout.payment_method === 'transfer' ? (
                     <div className="momo-payment checkout-wide">
-                      <img src={checkout.payment_method === 'momo' ? '/momo-qr.png' : '/agribank-qr.png'} alt={checkout.payment_method === 'momo' ? 'Mã QR MoMo do cửa hàng cung cấp' : 'Mã QR chuyển khoản Agribank do cửa hàng cung cấp'} />
-                      <p>{checkout.payment_method === 'momo' ? 'Quét mã QR bằng MoMo' : 'Quét mã QR bằng ứng dụng ngân hàng hỗ trợ VietQR/NAPAS'} và chuyển đúng số tiền <strong>{money(appliedVoucher?.total ?? cart.total)}</strong>. Nội dung chuyển khoản ghi mã đơn sau khi đặt hàng. Đây là mã QR tĩnh; cửa hàng cần kiểm tra giao dịch thực tế trước khi xác nhận thanh toán.</p>
+                      <img src={checkout.payment_method === 'momo' ? '/momo-qr.png' : '/agribank-qr.png'} alt={language === 'vi' ? checkout.payment_method === 'momo' ? 'Mã QR MoMo do cửa hàng cung cấp' : 'Mã QR chuyển khoản Agribank do cửa hàng cung cấp' : checkout.payment_method === 'momo' ? 'MoMo QR code provided by the store' : 'Agribank transfer QR code provided by the store'} />
+                      <p>{language === 'vi' ? checkout.payment_method === 'momo' ? 'Quét mã QR bằng MoMo' : 'Quét mã QR bằng ứng dụng ngân hàng hỗ trợ VietQR/NAPAS' : checkout.payment_method === 'momo' ? 'Scan the QR code using MoMo' : 'Scan the QR code using a bank app that supports VietQR/NAPAS'} {language === 'vi' ? 'và chuyển đúng số tiền' : 'and transfer exactly'} <strong>{money(appliedVoucher?.total ?? cart.total)}</strong>. {language === 'vi' ? 'Nội dung chuyển khoản ghi mã đơn sau khi đặt hàng. Đây là mã QR tĩnh; cửa hàng cần kiểm tra giao dịch thực tế trước khi xác nhận thanh toán.' : 'Include your order number in the transfer note after placing the order. This is a static QR code; the store must verify the transaction before confirming payment.'}</p>
                     </div>
                   ) : (
-                    <p className="payment-notice checkout-wide">Bạn thanh toán khi nhận hàng. Cửa hàng sẽ xác nhận đơn trước khi giao.</p>
+                    <p className="payment-notice checkout-wide">{language === 'vi' ? 'Bạn thanh toán khi nhận hàng. Cửa hàng sẽ xác nhận đơn trước khi giao.' : 'Pay when your order arrives. The store will confirm your order before shipping.'}</p>
                   )}
                   {checkoutError && <p className="commerce-error checkout-wide" role="alert">{checkoutError}</p>}
                   <button className="primary-button checkout-wide" type="submit" disabled={checkoutBusy || cart.items.length === 0}>
-                    {checkoutBusy ? 'Đang tạo đơn…' : 'Xác nhận đặt hàng'}
+                    {checkoutBusy ? t('Đang tạo đơn…') : t('Xác nhận đặt hàng')}
                   </button>
                 </form>
               </>
             ) : (
               <div className="order-success">
                 <span className="order-success-icon" aria-hidden="true">✓</span>
-                <span className="eyebrow">ĐẶT HÀNG THÀNH CÔNG</span>
-                <h2 id="checkout-title">Cảm ơn bạn đã mua hàng!</h2>
-                <p>Mã đơn hàng: <strong>{placedOrder.id}</strong></p>
-                <p>Tổng tiền hàng (chưa gồm phí giao): <strong>{money(placedOrder.total)}</strong></p>
-                <p>Cửa hàng sẽ liên hệ xác nhận phí giao, thời gian nhận dự kiến và trạng thái đơn hàng.</p>
+                <span className="eyebrow">{t('ĐẶT HÀNG THÀNH CÔNG')}</span>
+                <h2 id="checkout-title">{t('Cảm ơn bạn đã mua hàng!')}</h2>
+                <p>{t('Mã đơn hàng:')} <strong>{placedOrder.id}</strong></p>
+                <p>{t('Tổng tiền hàng (chưa gồm phí giao):')} <strong>{money(placedOrder.total)}</strong></p>
+                <p>{t('Cửa hàng sẽ liên hệ xác nhận phí giao, thời gian nhận dự kiến và trạng thái đơn hàng.')}</p>
                 <p>{placedOrder.payment === 'momo'
-                  ? 'Quét mã QR MoMo bằng ứng dụng ví, thanh toán đúng số tiền và ghi mã đơn trong nội dung. Đơn vẫn chờ cửa hàng kiểm tra và xác nhận giao dịch.'
+                  ? language === 'vi' ? 'Quét mã QR MoMo bằng ứng dụng ví, thanh toán đúng số tiền và ghi mã đơn trong nội dung. Đơn vẫn chờ cửa hàng kiểm tra và xác nhận giao dịch.' : 'Scan the MoMo QR code in your wallet app, pay the exact amount, and include your order number. The store must verify the payment before confirming the transaction.'
                   : placedOrder.payment === 'transfer'
-                    ? 'Quét mã Agribank bằng ứng dụng ngân hàng, chuyển đúng số tiền và ghi mã đơn trong nội dung. Mã QR tĩnh không tự xác minh giao dịch; đơn vẫn chờ cửa hàng đối soát.'
-                    : 'Bạn sẽ thanh toán khi nhận hàng. Cửa hàng sẽ liên hệ để xác nhận đơn.'}</p>
-                {placedOrder.payment === 'momo' && <img className="checkout-success-qr" src="/momo-qr.png" alt="Mã QR MoMo thanh toán đơn hàng" />}
-                {placedOrder.payment === 'transfer' && <img className="checkout-success-qr" src="/agribank-qr.png" alt="Mã QR Agribank thanh toán đơn hàng" />}
-                <button className="primary-button" type="button" onClick={() => { setCheckoutOpen(false); setPlacedOrder(null); onCloseCart() }}>Tiếp tục mua sắm</button>
+                    ? language === 'vi' ? 'Quét mã Agribank bằng ứng dụng ngân hàng, chuyển đúng số tiền và ghi mã đơn trong nội dung. Mã QR tĩnh không tự xác minh giao dịch; đơn vẫn chờ cửa hàng đối soát.' : 'Scan the Agribank QR code in your banking app, transfer the exact amount, and include your order number. The static QR code cannot verify the payment; the store must reconcile it.'
+                    : language === 'vi' ? 'Bạn sẽ thanh toán khi nhận hàng. Cửa hàng sẽ liên hệ để xác nhận đơn.' : 'Pay when your order arrives. The store will contact you to confirm the order.'}</p>
+                {placedOrder.payment === 'momo' && <img className="checkout-success-qr" src="/momo-qr.png" alt={language === 'vi' ? 'Mã QR MoMo thanh toán đơn hàng' : 'MoMo QR code for order payment'} />}
+                {placedOrder.payment === 'transfer' && <img className="checkout-success-qr" src="/agribank-qr.png" alt={language === 'vi' ? 'Mã QR Agribank thanh toán đơn hàng' : 'Agribank QR code for order payment'} />}
+                <button className="primary-button" type="button" onClick={() => { setCheckoutOpen(false); setPlacedOrder(null); onCloseCart() }}>{t('Tiếp tục mua sắm')}</button>
               </div>
             )}
           </section>
